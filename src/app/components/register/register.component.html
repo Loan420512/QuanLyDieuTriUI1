@@ -1,0 +1,7 @@
+<h2>Đăng ký tài khoản</h2>
+<form (ngSubmit)="register()">
+  <input [(ngModel)]="user.name" name="name" placeholder="Họ tên" required />
+  <input [(ngModel)]="user.email" name="email" placeholder="Email" type="email" required />
+  <input [(ngModel)]="user.password" name="password" placeholder="Mật khẩu" type="password" required />
+  <button type="submit">Đăng ký</button>
+</form>
