@@ -1,9 +1,7 @@
 // register component sample
 
 import { Component } from '@angular/core';
-import { ApiService } from '../../../services/api.service';
-
-
+import { ApiService } from '../../services/api.service';
 
 @Component({
   selector: 'app-register',
@@ -23,13 +21,13 @@ export class RegisterComponent {
   constructor(private api: ApiService) {}
 
   register() {
-    this.api.register({
-      fullName: this.fullName,
-      email: this.email,
-      password: this.password
-    }).subscribe({
-      next: res => alert('Registered'),
-      error: err => alert('Failed')
-    });
-  }
+  this.api.registerUser({   // ✅ Sửa tên hàm cho đúng
+    fullName: this.fullName,
+    email: this.email,
+    password: this.password
+  }).subscribe({
+   next: (res: any) => alert('Registered'),
+    error: (err: any) => alert('Failed')
+  });
+}
 }
