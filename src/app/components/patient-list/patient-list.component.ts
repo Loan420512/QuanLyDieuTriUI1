@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ApiService } from '../../../services/api.service';
+import { ApiService } from '../../services/api.service';
 
 @Component({
   selector: 'app-patient-list',
@@ -16,7 +16,7 @@ export class PatientListComponent implements OnInit {
       next: (res: any) => {
         this.patients = res;
       },
-      error: err => {
+      error: (err: any)=> {
         console.error('Lỗi tải danh sách bệnh nhân:', err);
       }
     });
