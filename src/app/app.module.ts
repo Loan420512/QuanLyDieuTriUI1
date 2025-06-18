@@ -1,34 +1,26 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
-
 import { AppComponent } from './app.component';
-import { LoginComponent } from './components/login/login.component';
+import { routes } from './app.routes';
+
 import { HomeComponent } from './components/Home/Home.component';
-import { PatientListComponent } from './components/patient-list/patient-list.component';
+import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
+import { PatientsComponent } from './components/Patients/patient-list.component';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    LoginComponent,
-    HomeComponent,
-    PatientListComponent,
-    RegisterComponent
-  ],
+  declarations: [],
   imports: [
     BrowserModule,
-    FormsModule,
-    RouterModule.forRoot([
-      { path: '', component: LoginComponent },
-      { path: 'home', component: HomeComponent },
-      { path: 'patients', component: PatientListComponent },
-      { path: 'register', component: RegisterComponent }
-    ])
+    RouterModule.forRoot(routes),
+    AppComponent,
+    HomeComponent,
+    LoginComponent,
+    RegisterComponent,
+    PatientsComponent
   ],
-  providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}
