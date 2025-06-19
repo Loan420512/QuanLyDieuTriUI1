@@ -1,33 +1,31 @@
-// register component sample
-
 import { Component } from '@angular/core';
-import { ApiService } from '../../services/api.service';
-
+import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-register',
-  template: `
-    <h2>Register</h2>
-    <input [(ngModel)]="fullName" placeholder="Full Name" />
-    <input [(ngModel)]="email" placeholder="Email" />
-    <input [(ngModel)]="password" placeholder="Password" type="password" />
-    <button (click)="register()">Register</button>
-  `
+  standalone: true,
+  imports: [FormsModule],
+  templateUrl: './register.component.html',  // Ensure path is correct
+  styleUrls: ['./register.component.css']
 })
 export class RegisterComponent {
-  fullName = '';
-  email = '';
-  password = '';
+  fullName: string = '';
+  email: string = '';
+  password: string = '';
+  confirmPassword: string = '';
 
-  constructor(private api: ApiService) {}
+  // Define the onSubmit method to handle form submission
+  onSubmit() {
+    if (this.password !== this.confirmPassword) {
+      alert("Passwords do not match!");
+      return;
+    }
 
-  register() {
-  this.api.registerUser({   // ✅ Sửa tên hàm cho đúng
-    fullName: this.fullName,
-    email: this.email,
-    password: this.password
-  }).subscribe({
-   next: (res: any) => alert('Registered'),
-    error: (err: any) => alert('Failed')
-  });
-}
+    const formData = {
+      fullName: this.fullName,
+      email: this.email,
+      password: this.password
+    };
+
+    console.log("Form submitted:", formData);
+  }
 }

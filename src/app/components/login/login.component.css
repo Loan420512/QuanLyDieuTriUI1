@@ -1,110 +1,156 @@
-.login-wrapper {
-  display: flex;
+.login-page {
   height: 100vh;
-  font-family: 'Segoe UI', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(to right, #2c3e50, #bdc3c7);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.login-left, .login-right {
+.form-container {
+  display: flex;
+  width: 900px;
+  height: 500px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+.form-left {
   flex: 1;
-  padding: 50px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: white;
+  padding: 40px;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  text-align: center;
 }
 
-.login-left {
-  background-color: #fff;
+.form-left h1 {
+  font-size: 36px;
+  margin-bottom: 10px;
+}
+
+.form-left .description {
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.social-icons {
+  margin-top: 20px;
+}
+
+.social-icons i {
+  font-size: 22px;
+  margin: 0 10px;
+  cursor: pointer;
+  color: white;
+  transition: transform 0.3s;
+}
+
+.social-icons i:hover {
+  transform: scale(1.2);
+}
+
+.form-right {
+  flex: 1;
+  padding: 50px 40px;
+  background: white;
+}
+
+.form-right h2 {
+  font-size: 28px;
+  margin-bottom: 30px;
   color: #333;
 }
 
-.logo {
-  width: 120px;
-  margin-bottom: 30px;
+.form-right label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 5px;
 }
 
-.login-left h2 {
-  font-size: 28px;
-  margin-bottom: 10px;
-}
-
-.login-left p {
+.form-right input[type="email"],
+.form-right input[type="password"] {
+  width: 100%;
+  padding: 10px;
   margin-bottom: 20px;
-  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
-form input {
+.terms {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.terms input {
+  margin-right: 10px;
+}
+
+.submit-btn {
   width: 100%;
   padding: 12px;
-  margin-bottom: 15px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
+  background-color: #e74c3c;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
-.options {
+.submit-btn:hover {
+  background-color: #c0392b;
+}
+
+.account-link {
+  margin-top: 15px;
+  text-align: center;
+  font-size: 14px;
+  color: #3498db;
+}
+
+.account-link a {
+  color: #3498db;
+  text-decoration: none;
+  margin: 0 5px;
+}
+
+.social-login {
   display: flex;
   justify-content: space-between;
-  font-size: 13px;
-  margin-bottom: 20px;
-}
-
-.btn-login {
-  background-color: #007bff;
-  border: none;
-  color: #fff;
-  padding: 12px;
-  width: 100%;
-  border-radius: 6px;
-  font-weight: bold;
-  margin-bottom: 20px;
-}
-
-.divider {
-  text-align: center;
-  margin: 20px 0;
-  position: relative;
-}
-
-.divider span {
-  background: #fff;
-  padding: 0 10px;
-  position: relative;
-  z-index: 1;
-}
-
-.divider::before {
-  content: "";
-  height: 1px;
-  background: #ccc;
-  position: absolute;
-  top: 50%;
-  left: 0;
-  right: 0;
-  z-index: 0;
-}
-
-.btn-google, .btn-facebook {
-  background: #f5f5f5;
-  padding: 12px;
-  border: none;
-  border-radius: 6px;
-  margin-bottom: 10px;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.login-right {
-  background: #074c4d;
-  color: #fff;
-  text-align: center;
-}
-
-.login-right img {
-  max-width: 300px;
-  margin: 30px auto;
-}
-
-.support {
-  font-size: 14px;
   margin-top: 20px;
-  opacity: 0.8;
+}
+
+.btn-google,
+.btn-facebook {
+  flex: 1;
+  padding: 10px;
+  margin-right: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-google img {
+  margin-right: 8px;
+}
+
+.btn-facebook i {
+  margin-right: 8px;
+  color: #3b5998;
+}
+
+.btn-google:hover,
+.btn-facebook:hover {
+  background-color: #f2f2f2;
 }

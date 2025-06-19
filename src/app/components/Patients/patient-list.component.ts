@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-patients',
-  standalone: true,
-  templateUrl: './patients.component.html',
-  styleUrls: ['./patients.component.css']
+  selector: 'app-patient',
+  templateUrl: './patient-list.component.html',
+  styleUrls: ['./patient-list.component.css'],
+  imports: [CommonModule]
 })
 export class PatientsComponent {
   patients = [

@@ -1,1 +1,4 @@
 /* You can add global styles to this file, and also import other style files */
+.login-page, .form-container, .form-left, .form-right {
+  all: unset; /* chỉ test thử */
+}

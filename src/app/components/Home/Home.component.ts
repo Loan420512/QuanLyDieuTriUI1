@@ -10,9 +10,14 @@ declare var PureCounter: any;
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
+
 export class HomeComponent implements AfterViewInit {
+
   ngAfterViewInit(): void {
-    if (AOS) AOS.init();
+    if (AOS) {
+      AOS.init();
+    }
+
     if (Swiper) {
       new Swiper('.init-swiper', {
         loop: true,
@@ -26,6 +31,9 @@ export class HomeComponent implements AfterViewInit {
         }
       });
     }
-    if (PureCounter) new PureCounter();
+
+    if (PureCounter) {
+      new PureCounter();
+    }
   }
 }
