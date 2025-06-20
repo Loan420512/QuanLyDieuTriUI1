@@ -1,3 +1,5 @@
+<div class="register-wrapper">
+  <div class="register-form">
 <form (ngSubmit)="onSubmit()" #registerForm="ngForm">
   <div class="form-group">
     <label for="fullName">Full Name</label>
@@ -21,3 +23,4 @@
 
   <button type="submit" [disabled]="!registerForm.valid">Register</button>
 </form>
+</div>

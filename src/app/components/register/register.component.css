@@ -1,100 +1,72 @@
-/* General styling for both simple and complex registration page layouts */
-.simple-register-page {
-  height: 100vh;
+/* Container chia thành 2 cột trái - phải */
+.register-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #ffffff;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-.register-page {
   height: 100vh;
-  background: linear-gradient(to right, #2c3e50, #bdc3c7);  /* Gradient background */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-family: 'Segoe UI', sans-serif;
-}
-
-/* Register container to hold the form and image side by side */
-.register-container {
-  width: 900px;
-  height: 500px;
-  background: #fff;
-  border-radius: 10px;
-  display: flex;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-  overflow: hidden;
-}
-
-/* Left side background with an image */
-.register-left {
-  flex: 1;
   padding: 40px;
-  color: #fff;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  text-align: center;
+  background-color: #f9f9f9;
+  gap: 60px;
 }
 
-.register-left h1 {
-  font-size: 30px;
-  margin-bottom: 20px;
-}
-
-.register-left p {
-  font-size: 16px;
-}
-
-/* Right side for form */
-.register-right {
-  flex: 1;
-  padding: 30px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.register-card {
-  width: 100%;
-  max-width: 400px;
+/* Form bên trái */
+.register-form {
   background: #fff;
-  padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-  text-align: center;
+  padding: 40px 30px;
+  border-radius: 8px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.08);
+  width: 350px;
 }
 
-.register-card h2 {
-  margin-bottom: 20px;
-  font-size: 22px;
+.register-form h2 {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 20px;
   font-weight: bold;
 }
 
-/* Styling for input fields */
-.register-card input {
+/* Input fields */
+.register-form input[type="text"],
+.register-form input[type="email"],
+.register-form input[type="tel"],
+.register-form input[type="password"] {
   width: 100%;
-  padding: 10px;
-  margin-bottom: 14px;
+  padding: 12px 15px;
+  margin-bottom: 15px;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 6px;
   font-size: 14px;
+  outline: none;
+  transition: border-color 0.3s ease;
 }
 
-/* Button styling */
-.submit-btn {
+.register-form input:focus {
+  border-color: #1976d2;
+}
+
+/* Button */
+.register-form button {
   width: 100%;
   padding: 12px;
-  background-color: #007bff;
-  color: white;
-  font-weight: bold;
+  background-color: #1976d2;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
+  color: #fff;
+  font-weight: bold;
+  font-size: 15px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
-.submit-btn:hover {
-  background-color: #0056b3;
+.register-form button:hover {
+  background-color: #125ea6;
+}
+
+/* Image bên phải */
+.register-image img {
+  max-width: 400px;
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.1);
 }

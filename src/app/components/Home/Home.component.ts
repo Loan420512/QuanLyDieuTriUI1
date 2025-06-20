@@ -3,6 +3,7 @@ import { Component, AfterViewInit } from '@angular/core';
 declare var AOS: any;
 declare var Swiper: any;
 declare var PureCounter: any;
+declare var bootstrap: any;
 
 @Component({
   selector: 'app-home',
@@ -35,5 +36,11 @@ export class HomeComponent implements AfterViewInit {
     if (PureCounter) {
       new PureCounter();
     }
+    document.querySelectorAll('[data-bs-toggle="tab"]').forEach(tab => {
+      new bootstrap.Tab(tab); // 👈 khởi tạo các tab
+    });
+    document.querySelectorAll('[data-bs-toggle="tab"]').forEach(tab => {
+    new bootstrap.Tab(tab);
+  });
   }
 }

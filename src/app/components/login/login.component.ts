@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ApiService, LoginResponse } from '../../services/api.service';
 
 @Component({
   selector: 'app-login',
@@ -13,28 +14,35 @@ import { CommonModule } from '@angular/common';
 export class LoginComponent {
   username = '';
   password = '';
-  errorMessage: string = '';
+  errorMessage = '';
 
-  constructor(private router: Router) {}
+  constructor(private api: ApiService, private router: Router) {}
 
- login(): void {
-  const user = this.username.trim();
-  const pass = this.password.trim();
+  login(): void {
+    const user = this.username.trim();
+    const pass = this.password.trim();
 
-  if (!user || !pass) {
-    alert('❗ Please fill in both fields.');
-    return;
-  }
+    if (!user || !pass) {
+      alert('❗ Please fill in both fields.');
+      return;
+    }
 
-  if (user === 'admin' && pass === 'admin123') {
-    alert(`✅ Logged in as ${user}`);
-    this.router.navigate(['/admin']);
-  } else if (user === 'doctor' && pass === 'doc123') {
-    alert(`✅ Logged in as ${user}`);
-    this.router.navigate(['/doctor']);
-  } else {
-    alert('❌ Invalid credentials!');
+    this.api.login(user, pass).subscribe({
+      next: (response: LoginResponse) => {
+        alert(`✅ Welcome ${response.username}`);
+        if (response.role === 'admin') {
+          this.router.navigate(['/admin']);
+        } else if (response.role === 'doctor') {
+          this.router.navigate(['/doctor']);
+        } else {
+          this.router.navigate(['/home']);
+        }
+      },
+      error: (err) => {
+        console.error(err);
+        this.errorMessage = '❌ Invalid username or password!';
+        alert(this.errorMessage);
+      }
+    });
   }
 }
-}
-

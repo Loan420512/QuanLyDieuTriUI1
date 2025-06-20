@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
-import { Observable, of } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 
 // Define types for the response and request data
 export interface RegisterResponse {
@@ -17,20 +17,35 @@ export interface RegisterData {
   password: string;
 }
 
+// ✅ Thêm interface LoginResponse bị thiếu
+export interface LoginResponse {
+  username: string;
+  role: string;
+  token?: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
+  private baseUrl = 'http://localhost:3000/api'; // nhớ khai báo baseUrl này
   private adminUsername = 'admin';
   private adminPassword = 'admin123';
 
   constructor(private http: HttpClient) {}
 
+  login(username: string, password: string): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(`${this.baseUrl}/login`, { username, password }).pipe(
+      catchError((error) => {
+        console.error('Login failed', error);
+        return throwError(() => new Error('Login failed'));
+      })
+    );
+  }
 
   authenticate(username: string, password: string): boolean {
     return username === this.adminUsername && password === this.adminPassword;
   }
-
 
   getPatients(): Observable<any[]> {
     return this.http.get<any[]>('/api/patients').pipe(
@@ -40,7 +55,6 @@ export class ApiService {
       })
     );
   }
-
 
   registerUser(data: RegisterData): Observable<RegisterResponse> {
     return this.http.post<RegisterResponse>('/api/register', data).pipe(
