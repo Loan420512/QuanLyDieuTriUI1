@@ -1,0 +1,52 @@
+<div class="feedback-container">
+  <h2>Phản hồi bác sĩ</h2>
+
+  <form [formGroup]="feedbackForm" (ngSubmit)="onSubmit()">
+    <!-- Chọn bác sĩ -->
+    <label for="doctor">Chọn bác sĩ</label>
+    <select id="doctor" formControlName="doctorId">
+      <option value="">-- Chọn bác sĩ --</option>
+      <option *ngFor="let doctor of doctors" [value]="doctor.id">
+        {{ doctor.name }}
+      </option>
+    </select>
+    <div class="error" *ngIf="submitted && feedbackForm.get('doctorId')?.errors">
+      Vui lòng chọn bác sĩ.
+    </div>
+
+    <!-- Tên -->
+    <label for="name">Tên bạn</label>
+    <input id="name" type="text" formControlName="name" />
+    <div class="error" *ngIf="submitted && feedbackForm.get('name')?.errors">
+      Tên không được để trống.
+    </div>
+
+    <!-- Email -->
+    <label for="email">Email</label>
+    <input id="email" type="email" formControlName="email" />
+    <div class="error" *ngIf="submitted && feedbackForm.get('email')?.errors">
+      Email không hợp lệ.
+    </div>
+
+    <!-- Đánh giá -->
+    <label for="rating">Đánh giá (1 - 5 sao)</label>
+    <input id="rating" type="number" formControlName="rating" min="1" max="5" />
+    <div class="error" *ngIf="submitted && feedbackForm.get('rating')?.errors">
+      Đánh giá từ 1 đến 5 sao.
+    </div>
+
+    <!-- Nội dung phản hồi -->
+    <label for="message">Nội dung phản hồi</label>
+    <textarea id="message" rows="4" formControlName="message"></textarea>
+    <div class="error" *ngIf="submitted && feedbackForm.get('message')?.errors">
+      Nội dung phải dài ít nhất 10 ký tự.
+    </div>
+
+    <!-- Nút gửi -->
+    <button type="submit">Gửi phản hồi</button>
+  </form>
+
+  <!-- Hiển thị kết quả -->
+  <p class="success" *ngIf="successMessage">{{ successMessage }}</p>
+  <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+</div>

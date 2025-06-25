@@ -13,33 +13,41 @@
     <!-- RIGHT SIDE -->
     <div class="form-right">
       <h2>Sign In</h2>
-      <form (ngSubmit)="login()" #form="ngForm">
-        <label for="username">Email</label>
-        <input type="email" id="username" name="username" [(ngModel)]="username" placeholder="Enter email" required />
 
+      <form (ngSubmit)="onLogin()" #form="ngForm">
+        <!-- Username -->
+        <label for="username">Username</label>
+        <input
+          type="text"
+          id="username"
+          name="username"
+          [(ngModel)]="username"
+          placeholder="Enter username"
+          required
+        />
+
+        <!-- Password -->
         <label for="password">Password</label>
-        <input type="password" id="password" name="password" [(ngModel)]="password" placeholder="Enter password" required />
+        <input
+          type="password"
+          id="password"
+          name="password"
+          [(ngModel)]="password"
+          placeholder="Enter password"
+          required
+        />
 
+        <!-- Terms checkbox -->
         <div class="terms">
-          <input type="checkbox" id="agree" required />
-          <label for="agree">I agree to the <a href="#">terms of service</a></label>
+          <input type="checkbox" id="agree" name="agree" required />
+          <label for="agree">
+            I agree to the <a href="#">terms of service</a>
+          </label>
         </div>
 
-        <button type="submit" class="submit-btn">Login</button>
+        <!-- Submit button -->
+        <button type="submit" class="submit-btn" [disabled]="!form.valid">Login</button>
 
-        <div class="account-link">
-          <a routerLink="/forgot-password">Forgot Password?</a> |
-          <a routerLink="/register">Don't have an account?</a>
-        </div>
-
-        <div class="social-login">
-          <button type="button" class="btn-google">
-            <img src="https://img.icons8.com/color/16/000000/google-logo.png" /> Sign in with Google
-          </button>
-          <button type="button" class="btn-facebook">
-            <i class="fab fa-facebook-f"></i> Sign in with Facebook
-          </button>
-        </div>
       </form>
     </div>
   </div>

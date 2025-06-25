@@ -1,16 +1,36 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { PatientService, Patient } from '../../services/patient.service';
 
 @Component({
   selector: 'app-patient',
+  standalone: true,
   templateUrl: './patient-list.component.html',
   styleUrls: ['./patient-list.component.css'],
   imports: [CommonModule]
 })
-export class PatientsComponent {
-  patients = [
-    { id: 1, name: 'Nguyen Van A', age: 32, gender: 'Male' },
-    { id: 2, name: 'Tran Thi B', age: 29, gender: 'Female' },
-    { id: 3, name: 'Le Van C', age: 40, gender: 'Male' }
-  ];
+export class PatientsComponent implements OnInit {
+  patients: Patient[] = [];
+
+  constructor(private patientService: PatientService) {}
+
+  ngOnInit(): void {
+    this.loadPatients();
+  }
+
+  loadPatients(): void {
+    this.patientService.getPatients().subscribe({
+      next: (data) => {
+        this.patients = data;
+      },
+      error: (err) => {
+        console.error('Lỗi khi tải danh sách bệnh nhân:', err);
+      }
+    });
+  }
+  deletePatient(id: number) {
+    this.patientService.deletePatient(id).subscribe(() => {
+      this.patients = this.patients.filter(p => p.id !== id);
+    });
+  }
 }

@@ -1,20 +1,23 @@
-<div class="patients">
-  <h2>Patient List</h2>
-  <table class="table table-striped">
-    <thead>
+<div class="container mt-4">
+  <h2 class="mb-3">Danh sách bệnh nhân</h2>
+
+  <table class="table table-bordered table-hover">
+    <thead class="table-dark">
       <tr>
         <th>ID</th>
-        <th>Name</th>
-        <th>Age</th>
-        <th>Gender</th>
+        <th>Họ và Tên</th>
+        <th>Email</th>
+        <th>Giới tính</th>
+        <th>Ngày sinh</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let patient of patients">
         <td>{{ patient.id }}</td>
-        <td>{{ patient.name }}</td>
-        <td>{{ patient.age }}</td>
-        <td>{{ patient.gender }}</td>
+        <td>{{ patient.fullName }}</td>
+        <td>{{ patient.email }}</td>
+        <td>{{ patient.gender || '-' }}</td>
+        <td>{{ patient.dob || '-' }}</td>
       </tr>
     </tbody>
   </table>

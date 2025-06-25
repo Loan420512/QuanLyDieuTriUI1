@@ -1,67 +1,85 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { Observable, of, throwError } from 'rxjs';
 
-// Define types for the response and request data
-export interface RegisterResponse {
-  status: string;
-  message: string;
-  data?: any;
-}
-
+// ---------- Interfaces ----------
 export interface RegisterData {
-  fullName: string;
-  email: string;
-  phone: string;
-  password: string;
+  Username: string;
+  Email: string;
+  Password: string;
+  ConfirmPassword: string;
 }
 
-// ✅ Thêm interface LoginResponse bị thiếu
+export interface RegisterResponse {
+  data: {
+    userId: number;
+    userName: string;
+    email: string;
+  };
+  success: boolean;
+  code: string | null;
+  message: string;
+  variant: string;
+  title: string;
+}
+
+
 export interface LoginResponse {
   username: string;
   role: string;
   token?: string;
+  message?: string;
 }
 
+// ---------- API Service ----------
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
-  private baseUrl = 'http://localhost:3000/api'; // nhớ khai báo baseUrl này
-  private adminUsername = 'admin';
-  private adminPassword = 'admin123';
+  private apiUrl = 'https://localhost:7240/api';
 
   constructor(private http: HttpClient) {}
 
-  login(username: string, password: string): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.baseUrl}/login`, { username, password }).pipe(
-      catchError((error) => {
-        console.error('Login failed', error);
-        return throwError(() => new Error('Login failed'));
-      })
-    );
+  // ------------------ AUTH ------------------
+  login(username: string, password: string): Observable<any> {
+  return this.http.post('https://localhost:7240/api/Login/Login', null, {
+    params: new HttpParams()
+      .set('userName', username)
+      .set('Password', password),
+  });
   }
 
-  authenticate(username: string, password: string): boolean {
-    return username === this.adminUsername && password === this.adminPassword;
-  }
-
-  getPatients(): Observable<any[]> {
-    return this.http.get<any[]>('/api/patients').pipe(
-      catchError((error) => {
-        console.error('Failed to fetch patients', error);
-        return of([]);
-      })
-    );
-  }
 
   registerUser(data: RegisterData): Observable<RegisterResponse> {
-    return this.http.post<RegisterResponse>('/api/register', data).pipe(
+    return this.http.post<RegisterResponse>('https://localhost:7240/api/Register/register-with-email-confirmation', data);
+  }
+
+  confirmEmail(userId: number, token: string): Observable<any> {
+    const url = `${this.apiUrl}/Register/confirm-email?userId=${userId}&token=${encodeURIComponent(token)}`;
+    return this.http.get(url);
+  }
+
+  // ------------------ PATIENT ------------------
+  getPatients(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/patients`).pipe(
       catchError((error) => {
-        console.error('Registration failed', error);
-        throw new Error('Registration failed. Please try again later.');
+        console.error('Failed to fetch patients', error);
+        return of([]); // Trả mảng rỗng nếu có lỗi
       })
     );
   }
+
+  // ------------------ BOOKING ------------------
+  getBookings(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/Bookings`);
+  }
+
+  // ------------------ ADMIN (DEV MODE) ------------------
+  authenticateDevAdmin(username: string, password: string): boolean {
+    const adminUsername = 'admin';
+    const adminPassword = 'admin123';
+    return username === adminUsername && password === adminPassword;
+  }
 }
+

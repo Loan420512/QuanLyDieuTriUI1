@@ -56,13 +56,15 @@
           },
           "configurations": {
             "production": {
-              "buildTarget": "infertility-frontend:build:production"
+              "buildTarget": "infertility-frontend:build:production",
+              "proxyConfig": "proxy.conf.json"
             },
             "development": {
               "buildTarget": "infertility-frontend:build:development"
             }
           },
           "defaultConfiguration": "development"
+
         }
       }
     }

@@ -1,0 +1,6 @@
+<nav>
+  <div>
+    <span *ngIf="username">👤 Xin chào, {{ username }} ({{ role }})</span>
+    <button *ngIf="username" (click)="logout()">Đăng xuất</button>
+  </div>
+</nav>

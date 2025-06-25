@@ -1,26 +1,53 @@
 <div class="register-wrapper">
   <div class="register-form">
-<form (ngSubmit)="onSubmit()" #registerForm="ngForm">
-  <div class="form-group">
-    <label for="fullName">Full Name</label>
-    <input type="text" id="fullName" [(ngModel)]="fullName" name="fullName" required />
-  </div>
+    <form (ngSubmit)="onSubmit()" #registerForm="ngForm">
+      <div class="form-group">
+        <label for="userName">Username</label>
+        <input
+          type="text"
+          id="userName"
+          [(ngModel)]="user.Username"
+          name="Username"
+          required
+        />
+      </div>
 
-  <div class="form-group">
-    <label for="email">Email</label>
-    <input type="email" id="email" [(ngModel)]="email" name="email" required />
-  </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input
+          type="email"
+          id="email"
+          [(ngModel)]="user.Email"
+          name="Email"
+          required
+        />
+      </div>
 
-  <div class="form-group">
-    <label for="password">Password</label>
-    <input type="password" id="password" [(ngModel)]="password" name="password" required />
-  </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          [(ngModel)]="user.Password"
+          name="Password"
+          required
+        />
+      </div>
 
-  <div class="form-group">
-    <label for="confirmPassword">Confirm Password</label>
-    <input type="password" id="confirmPassword" [(ngModel)]="confirmPassword" name="confirmPassword" required />
-  </div>
+      <div class="form-group">
+        <label for="confirmPassword">Confirm Password</label>
+        <input
+          type="password"
+          id="confirmPassword"
+          [(ngModel)]="user.ConfirmPassword"
+          name="ConfirmPassword"
+          required
+        />
+      </div>
 
-  <button type="submit" [disabled]="!registerForm.valid">Register</button>
-</form>
+      <button type="submit" [disabled]="!registerForm.valid">
+        Register
+      </button>
+    </form>
+  </div>
 </div>
