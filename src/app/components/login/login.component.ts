@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { ApiService } from '../../services/api.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -12,48 +13,44 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule, FormsModule]
 })
 export class LoginComponent {
-  username: string = '';
+  userName: string = '';
   password: string = '';
 
   constructor(
     private api: ApiService,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) {}
 
   onLogin(): void {
-    const user = this.username.trim();
-    const pass = this.password.trim();
-
-    if (!user || !pass) {
-      alert('Vui lòng nhập đầy đủ tài khoản và mật khẩu.');
-      return;
-    }
-
-    this.api.login(user, pass).subscribe({
+    this.api.login(this.userName, this.password).subscribe({
       next: (res) => {
-        const userData = res?.data;
-
-        if (!res?.success || !userData?.username || !userData?.role) {
-          alert(' Sai thông tin đăng nhập!');
+        const token = res.token;
+        if (!token) {
+          alert('Không nhận được token!');
           return;
         }
 
-        //  Lưu thông tin vào localStorage
-        localStorage.setItem('currentUser', JSON.stringify(userData));
+        // ✅ Gọi một lần duy nhất để lưu toàn bộ user info
+        this.authService.storeUserData(res);
+
         alert('Đăng nhập thành công!');
 
-        //  Điều hướng theo role
-        const role = userData.role.toLowerCase();
+        const role = res.role?.toLowerCase();
+        const userId = res.userId;
+
+        // ✅ Điều hướng theo vai trò
         if (role === 'admin') {
           this.router.navigate(['/admin']);
+        } else if (role === 'member') {
+          this.router.navigate(['/member-profile', userId]);
         } else {
           this.router.navigate(['/home']);
         }
       },
       error: (err) => {
-        const msg = err.error?.message || 'Không xác định';
-        alert('Lỗi từ server: ' + msg);
-        console.error(err);
+        console.error('Login error:', err);
+        alert('Đăng nhập thất bại!');
       }
     });
   }

@@ -1,16 +1,29 @@
 <div class="booking-container">
   <h2>Danh sách đặt lịch khám</h2>
 
+  <p *ngIf="member">Xin chào, <strong>{{ member.username }}</strong>!</p>
   <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
 
+  <!-- ✅ FORM ĐẶT LỊCH MỚI -->
+  <form (ngSubmit)="createBooking()" *ngIf="member" style="margin: 20px 0;">
+    <h3>Đặt lịch khám mới</h3>
+    <input [(ngModel)]="newBooking.fullName" name="fullName" placeholder="Họ tên" required />
+    <input [(ngModel)]="newBooking.email" name="email" placeholder="Email" type="email" required />
+    <input [(ngModel)]="newBooking.bookingDate" name="bookingDate" type="date" required />
+    <input [(ngModel)]="newBooking.serviceName" name="serviceName" placeholder="Dịch vụ" required />
+    <button type="submit">Đặt lịch</button>
+  </form>
+
+  <!-- ✅ BẢNG DANH SÁCH -->
   <table *ngIf="bookings.length > 0" class="booking-table">
     <thead>
       <tr>
         <th>ID</th>
         <th>Ngày đặt</th>
-        <th>Họ tên bệnh nhân</th>
+        <th>Họ tên</th>
         <th>Email</th>
         <th>Dịch vụ</th>
+        <th>Hành động</th>
       </tr>
     </thead>
     <tbody>
@@ -20,11 +33,27 @@
         <td>{{ b.fullName }}</td>
         <td>{{ b.email }}</td>
         <td>{{ b.serviceName }}</td>
+        <td>
+          <button (click)="viewDetails(b)">Chi tiết</button>
+          <button (click)="cancelBooking(b.bookingId)">Hủy</button>
+        </td>
       </tr>
     </tbody>
   </table>
 
+  <!-- ✅ Khi không có dữ liệu -->
   <div *ngIf="bookings.length === 0 && !errorMessage">
     Không có đặt lịch nào.
+  </div>
+
+  <!-- ✅ Chi tiết -->
+  <div *ngIf="selectedBooking" class="details-box">
+    <h3>Chi tiết đặt lịch</h3>
+    <p><strong>ID:</strong> {{ selectedBooking.bookingId }}</p>
+    <p><strong>Ngày đặt:</strong> {{ selectedBooking.bookingDate | date }}</p>
+    <p><strong>Họ tên:</strong> {{ selectedBooking.fullName }}</p>
+    <p><strong>Email:</strong> {{ selectedBooking.email }}</p>
+    <p><strong>Dịch vụ:</strong> {{ selectedBooking.serviceName }}</p>
+    <button (click)="selectedBooking = null">Đóng</button>
   </div>
 </div>

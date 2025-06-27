@@ -1,0 +1,33 @@
+<div class="container">
+  <div class="profile-header">
+    <div class="profile-card">
+      <img src="assets/img/icon.jpg" alt="Avatar" class="avatar" />
+      <h2>{{ member.name }}</h2>
+      <p>ID: {{ member.id }}</p>
+      <p>Email: <a href="mailto:{{ member.email }}">{{ member.email }}</a></p>
+      <p>Phone: {{ member.phone }}</p>
+      <p>Registered: {{ member.registered }}</p>
+      <button class="btn">Edit Profile</button>
+    </div>
+
+    <div class="treatment-card">
+      <h3>Membership Information</h3>
+      <p>Type: {{ member.membershipType }}</p>
+      <p>Assigned Staff: {{ member.staff }}</p>
+      <p>Start Date: {{ member.startDate }}</p>
+      <p>Status: <span class="status in-progress">{{ member.status }}</span></p>
+      <p>
+        📅 Next Check-In: {{ member.nextCheckIn }}
+      </p>
+      <button class="btn">View Full Schedule</button>
+    </div>
+  </div>
+
+  <div class="history">
+    <h3>Activity History</h3>
+    <div *ngFor="let item of member.activities" class="activity-item">
+      <p><strong>{{ item.date }}</strong> - {{ item.title }}</p>
+      <p class="note">{{ item.note }}</p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,67 @@
+.dashboard {
+  padding: 20px;
+  font-family: Arial;
+}
+.top-section {
+  display: flex;
+  gap: 20px;
+}
+.profile-card, .schedule-card {
+  background: #fff;
+  padding: 20px;
+  width: 50%;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+.avatar {
+  width: 100px;
+  border-radius: 50%;
+}
+.tags {
+  margin-top: 10px;
+}
+.tag {
+  display: inline-block;
+  padding: 4px 8px;
+  background: #d0e8ff;
+  border-radius: 12px;
+  margin-right: 5px;
+}
+.edit-button, .view-button, .case-card button {
+  background-color: #2d70f0;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+.schedule-card table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.schedule-card td {
+  padding: 8px;
+}
+.upcoming {
+  color: green;
+  font-weight: bold;
+}
+.completed {
+  color: gray;
+}
+.cancelled {
+  color: red;
+}
+.cases {
+  display: flex;
+  gap: 20px;
+  margin-top: 20px;
+}
+.case-card {
+  flex: 1;
+  padding: 15px;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}

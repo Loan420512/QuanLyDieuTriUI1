@@ -6,12 +6,10 @@ import { Observable, of, throwError } from 'rxjs';
 
 // 👉 Interface cho bệnh nhân (có thể sửa thêm nếu cần)
 export interface Patient {
-  id?: number;
+  id: number;
   fullName: string;
   email: string;
-  phone?: string;
-  gender?: string;
-  dob?: string;
+  doctorId: number;
 }
 
 @Injectable({
@@ -31,6 +29,7 @@ export class PatientService {
     );
   }
 
+
   addPatient(patient: Patient): Observable<Patient> {
     return this.http.post<Patient>(this.apiUrl, patient).pipe(
       catchError((error) => {
@@ -48,4 +47,14 @@ export class PatientService {
       })
     );
   }
+  getPatientsByDoctor(doctorId: number): Observable<Patient[]> {
+  const url = `${this.apiUrl}?doctorId=${doctorId}`;
+ return this.http.get<Patient[]>(`${this.apiUrl}/patients-by-doctor/${doctorId}`).pipe(
+    catchError((error) => {
+      console.error('Failed to fetch patients by doctor:', error);
+      return of([]);
+    })
+  );
+}
+
 }

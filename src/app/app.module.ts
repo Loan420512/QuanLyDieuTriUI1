@@ -11,6 +11,11 @@ import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { PatientsComponent } from './components/Patients/patient-list.component';
 import { FeedbackListComponent } from './components/feedback/feedback-list.component';
+import { MemberProfileComponent } from './components/member/member-profile.component';
+import { CommonModule } from '@angular/common';
+
+
+
 
 
 @NgModule({
@@ -27,6 +32,10 @@ import { FeedbackListComponent } from './components/feedback/feedback-list.compo
     LoginComponent,
     RegisterComponent,
     PatientsComponent,
+    FeedbackListComponent,
+     CommonModule,
+    MemberProfileComponent
+
 
   ],
   providers: [],

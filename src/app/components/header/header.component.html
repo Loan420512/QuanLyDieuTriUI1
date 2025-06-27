@@ -1,6 +1,8 @@
 <nav>
-  <div>
+
+  <ng-container *ngIf="loggedIn$ | async">
     <span *ngIf="username">👤 Xin chào, {{ username }} ({{ role }})</span>
     <button *ngIf="username" (click)="logout()">Đăng xuất</button>
-  </div>
+  </ng-container>
+
 </nav>

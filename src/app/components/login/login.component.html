@@ -16,18 +16,18 @@
 
       <form (ngSubmit)="onLogin()" #form="ngForm">
         <!-- Username -->
-        <label for="username">Username</label>
+        <label for="username">userName</label>
         <input
           type="text"
           id="username"
           name="username"
-          [(ngModel)]="username"
+          [(ngModel)]="userName"
           placeholder="Enter username"
           required
         />
 
         <!-- Password -->
-        <label for="password">Password</label>
+        <label for="password">password</label>
         <input
           type="password"
           id="password"

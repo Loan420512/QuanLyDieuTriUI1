@@ -26,7 +26,7 @@ export interface RegisterResponse {
 
 
 export interface LoginResponse {
-  username: string;
+  userName: string;
   role: string;
   token?: string;
   message?: string;
@@ -42,13 +42,29 @@ export class ApiService {
   constructor(private http: HttpClient) {}
 
   // ------------------ AUTH ------------------
-  login(username: string, password: string): Observable<any> {
-  return this.http.post('https://localhost:7240/api/Login/Login', null, {
-    params: new HttpParams()
-      .set('userName', username)
-      .set('Password', password),
+  login(userName: string, password: string): Observable<any> {
+  return this.http.post<any>('https://localhost:7240/api/Account/login', {
+    userName,
+    password
   });
-  }
+}
+getAuthHeaders() {
+  const token = localStorage.getItem('access_token');
+  return {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  };
+}
+getAdminData(): Observable<any> {
+  const token = localStorage.getItem('access_token');
+  return this.http.get('https://localhost:7240/api/Account/admin-data', {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+}
+
 
 
   registerUser(data: RegisterData): Observable<RegisterResponse> {
@@ -72,14 +88,36 @@ export class ApiService {
 
   // ------------------ BOOKING ------------------
   getBookings(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/Bookings`);
+  const token = localStorage.getItem('token'); // hoặc 'access_token' nếu bạn dùng key đó
+  const headers = {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  };
+  return this.http.get<any[]>(`${this.apiUrl}/Bookings`, headers);
   }
 
+
+  createBooking(bookingData: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/Bookings`, bookingData);
+  }
+  deleteBooking(id: number): Observable<any> {
+  return this.http.delete(`${this.apiUrl}/Bookings/${id}`);
+  }
+  updateBooking(id: number, bookingData: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/Bookings/${id}`, bookingData);
+  }
+
+  getMemberById(id: number): Observable<any> {
+  return this.http.get(`https://localhost:7240/api/Members/${id}`);
+  }
+
+
   // ------------------ ADMIN (DEV MODE) ------------------
-  authenticateDevAdmin(username: string, password: string): boolean {
-    const adminUsername = 'admin';
+  authenticateDevAdmin(userName: string, password: string): boolean {
+    const adminUserName = 'admin';
     const adminPassword = 'admin123';
-    return username === adminUsername && password === adminPassword;
+    return userName === adminUserName && password === adminPassword;
   }
 }
 

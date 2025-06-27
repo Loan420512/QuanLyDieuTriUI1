@@ -1,4 +1,5 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit, OnInit } from '@angular/core';
+import { DoctorService } from '../../services/doctor.service';
 
 declare var AOS: any;
 declare var Swiper: any;
@@ -11,13 +12,24 @@ declare var bootstrap: any;
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
+export class HomeComponent implements OnInit, AfterViewInit {
+  doctors: any[] = [];
 
-export class HomeComponent implements AfterViewInit {
+  constructor(private doctorService: DoctorService) {}
+
+  ngOnInit(): void {
+    this.doctorService.getDoctors().subscribe({
+      next: (data) => {
+        this.doctors = data;
+      },
+      error: (err) => {
+        console.error('Failed to load doctors:', err);
+      }
+    });
+  }
 
   ngAfterViewInit(): void {
-    if (AOS) {
-      AOS.init();
-    }
+    if (AOS) AOS.init();
 
     if (Swiper) {
       new Swiper('.init-swiper', {
@@ -33,14 +45,10 @@ export class HomeComponent implements AfterViewInit {
       });
     }
 
-    if (PureCounter) {
-      new PureCounter();
-    }
+    if (PureCounter) new PureCounter();
+
     document.querySelectorAll('[data-bs-toggle="tab"]').forEach(tab => {
-      new bootstrap.Tab(tab); // 👈 khởi tạo các tab
+      new bootstrap.Tab(tab);
     });
-    document.querySelectorAll('[data-bs-toggle="tab"]').forEach(tab => {
-    new bootstrap.Tab(tab);
-  });
   }
 }
