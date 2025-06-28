@@ -12,10 +12,14 @@ import {  HttpClient } from '@angular/common/http';
 })
 export class FeedbackListComponent implements OnInit {
   feedbackForm!: FormGroup;
-  doctors: any[] = [];
+  doctors: any[] = [{ id: 1, name: 'Dr.Nguyen', position: 'IVF Specialist' },
+  { id: 2, name: 'Dr.Le', position: 'Andrology Expert' },
+  { id: 3, name: 'Dr.Tran', position: 'Counselor' },
+  { id: 4, name: 'Dr.Pham', position: 'Lab Director' }];
   submitted = false;
   successMessage = '';
   errorMessage = '';
+
 
   constructor(private fb: FormBuilder, private http: HttpClient) {}
 
@@ -37,22 +41,25 @@ export class FeedbackListComponent implements OnInit {
   }
 
   onSubmit(): void {
-    this.submitted = true;
-    this.successMessage = '';
-    this.errorMessage = '';
+  this.submitted = true;
+  this.successMessage = '';
+  this.errorMessage = '';
 
-    if (this.feedbackForm.invalid) return;
+  if (this.feedbackForm.invalid) return;
 
-    this.http.post('https://your-api-url.com/api/doctor-feedback', this.feedbackForm.value)
-      .subscribe({
-        next: () => {
-          this.successMessage = 'Đã gửi phản hồi thành công!';
-          this.feedbackForm.reset({ rating: 5 });
-          this.submitted = false;
-        },
-        error: () => {
-          this.errorMessage = 'Gửi phản hồi thất bại.';
-        }
-      });
-  }
+  const selectedDoctorId = this.feedbackForm.value.doctorId;
+  const selectedDoctor = this.doctors.find(d => d.id == selectedDoctorId);
+
+  this.http.post('https://localhost:7240/api/Feedback/create-feedback', this.feedbackForm.value)
+    .subscribe({
+      next: () => {
+        this.successMessage = `Đã gửi phản hồi thành công cho bác sĩ ${selectedDoctor?.name}!`;
+        this.feedbackForm.reset({ rating: 5 });
+        this.submitted = false;
+      },
+      error: () => {
+        this.errorMessage = 'Gửi phản hồi thất bại.';
+      }
+    });
+}
 }

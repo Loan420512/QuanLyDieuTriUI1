@@ -1,24 +1,68 @@
-<div class="container mt-4">
-  <h2 class="mb-3">Danh sách bệnh nhân</h2>
+<table class="w-full border mb-6">
+  <thead>
+    <tr class="bg-gray-100">
+      <th class="p-2">Họ tên</th>
+      <th class="p-2">SĐT</th>
+      <th class="p-2">Giới tính</th>
+      <th class="p-2">Ngày sinh</th>
+      <th class="p-2">Thao tác</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let patient of patients">
+      <td class="p-2">{{ patient.fullName }}</td>
+      <td class="p-2">{{ patient.email }}</td>
+      <td class="p-2">{{ patient.gender }}</td>
+      <td class="p-2">{{ patient.dob | date:'dd/MM/yyyy' }}</td>
 
-  <table class="table table-bordered table-hover">
-    <thead class="table-dark">
-      <tr>
-        <th>ID</th>
-        <th>Họ và Tên</th>
-        <th>Email</th>
-        <th>Giới tính</th>
-        <th>Ngày sinh</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let patient of patients">
-        <td>{{ patient.id }}</td>
-        <td>{{ patient.fullName }}</td>
-        <td>{{ patient.email }}</td>
-        <td>{{ patient.gender || '-' }}</td>
-        <td>{{ patient.dob || '-' }}</td>
-      </tr>
-    </tbody>
-  </table>
+      <td class="p-2">
+        <button
+          (click)="selectPatient(patient)"
+          class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
+        >
+          Tạo nhắc nhở
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Form tạo nhắc nhở -->
+<div *ngIf="selectedPatient" class="bg-gray-50 p-4 rounded-lg shadow border">
+  <h3 class="text-lg font-semibold text-pink-600 mb-3">
+    Tạo nhắc nhở cho: {{ selectedPatient.name }}
+  </h3>
+
+  <div class="grid grid-cols-2 gap-4">
+    <input
+      type="time"
+      [(ngModel)]="reminderForm.medicineTime"
+      placeholder="Giờ uống thuốc"
+      class="p-2 border rounded"
+    />
+    <input
+      type="date"
+      [(ngModel)]="reminderForm.appointmentDate"
+      placeholder="Ngày tái khám"
+      class="p-2 border rounded"
+    />
+  </div>
+
+  <div class="mt-4">
+    <label class="mr-2">Hình thức gửi:</label>
+    <select [(ngModel)]="reminderForm.method" class="p-2 border rounded">
+      <option value="email">Email</option>
+      <option value="sms">SMS</option>
+      <option value="push">App</option>
+    </select>
+  </div>
+
+  <div class="mt-4 flex gap-2">
+    <button (click)="sendReminder()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+      Gửi nhắc nhở
+    </button>
+    <button (click)="selectedPatient = null" class="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-600">
+      Huỷ
+    </button>
+  </div>
 </div>

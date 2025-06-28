@@ -36,8 +36,13 @@ export const routes: Routes = [
     import('./components/booking/booking-list.component').then(m => m.BookingListComponent),
   canActivate: [AuthGuard]
   },
-
-
+  {
+  path: 'reminder',
+  loadComponent: () => import('./components/reminder/reminder.component').then(m => m.ReminderComponent)
+  },
+  {path: 'feedback', loadComponent: () => import('./components/feedback/feedback-list.component').then(m => m.FeedbackListComponent) },
+  {path: 'treatment-service', loadComponent: () => import('./components/treatment/treatment-service.component').then(m => m.TreatmentServiceComponent) },
+  {path: 'doctor-dashboard', loadComponent: () => import('./components/doctor/doctor-dashboard.component').then(m => m.DoctorDashboardComponent) },
 
   // ✅ Regular component-based routes
   { path: 'login', component: LoginComponent },
@@ -46,7 +51,11 @@ export const routes: Routes = [
    { path: 'treatment-service', component: TreatmentServiceComponent },
    { path: 'member-profile', component: MemberProfileComponent },
 
-   { path: 'doctor-dashboard', component: DoctorDashboardComponent }
+  {
+  path: 'doctors',
+  component: DoctorDashboardComponent,
+  canActivate: [AuthGuard]
+}
 
 
 

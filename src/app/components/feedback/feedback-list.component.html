@@ -6,6 +6,7 @@
     <label for="doctor">Chọn bác sĩ</label>
     <select id="doctor" formControlName="doctorId">
       <option value="">-- Chọn bác sĩ --</option>
+
       <option *ngFor="let doctor of doctors" [value]="doctor.id">
         {{ doctor.name }}
       </option>

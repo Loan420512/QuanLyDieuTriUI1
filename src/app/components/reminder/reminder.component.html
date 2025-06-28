@@ -1,0 +1,20 @@
+<div class="p-4 bg-gray-50 rounded">
+  <h3 class="text-lg font-semibold mb-2 text-pink-600">
+    Tạo nhắc nhở cho {{ patient.name }}
+  </h3>
+
+  <div class="grid grid-cols-2 gap-4">
+    <input type="time" [(ngModel)]="reminderForm.medicineTime" class="p-2 border rounded" />
+    <input type="date" [(ngModel)]="reminderForm.appointmentDate" class="p-2 border rounded" />
+  </div>
+
+  <select [(ngModel)]="reminderForm.method" class="mt-4 p-2 border rounded">
+    <option value="email">Email</option>
+    <option value="sms">SMS</option>
+    <option value="push">App</option>
+  </select>
+
+  <button (click)="sendReminder()" class="mt-4 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+    Gửi nhắc nhở
+  </button>
+</div>

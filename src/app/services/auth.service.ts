@@ -24,11 +24,11 @@ export class AuthService {
 
   private usernameSubject = new BehaviorSubject<string | null>(null);
   private roleSubject = new BehaviorSubject<string | null>(null);
-  private loggedInSubject = new BehaviorSubject<boolean>(!!this.getToken()); // ✅ THÊM DÒNG NÀY
+  private loggedInSubject = new BehaviorSubject<boolean>(!!this.getToken());
 
   username$ = this.usernameSubject.asObservable();
   role$ = this.roleSubject.asObservable();
-  loggedIn$ = this.loggedInSubject.asObservable(); // ✅ THÊM DÒNG NÀY
+  loggedIn$ = this.loggedInSubject.asObservable();
 
   constructor(private http: HttpClient) {
     const userStr = localStorage.getItem('currentUser');
@@ -57,7 +57,7 @@ export class AuthService {
     localStorage.setItem('currentUser', JSON.stringify(user));
     this.usernameSubject.next(user.userName);
     this.roleSubject.next(user.role);
-    this.loggedInSubject.next(true); // ✅ thông báo đăng nhập
+    this.loggedInSubject.next(true); // ✅ Cập nhật trạng thái đăng nhập
   }
 
    getCurrentUser() {

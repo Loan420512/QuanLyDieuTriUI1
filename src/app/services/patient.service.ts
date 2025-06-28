@@ -10,6 +10,8 @@ export interface Patient {
   fullName: string;
   email: string;
   doctorId: number;
+  dob?: string;
+   gender?: string;
 }
 
 @Injectable({

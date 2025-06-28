@@ -13,14 +13,14 @@ import { PatientsComponent } from './components/Patients/patient-list.component'
 import { FeedbackListComponent } from './components/feedback/feedback-list.component';
 import { MemberProfileComponent } from './components/member/member-profile.component';
 import { CommonModule } from '@angular/common';
-
+import { ReminderComponent } from './components/reminder/reminder.component';
+import { DoctorDashboardComponent } from './components/doctor/doctor-dashboard.component';
 
 
 
 
 @NgModule({
   declarations: [
-
   ],
   imports: [
     BrowserModule,
@@ -34,9 +34,9 @@ import { CommonModule } from '@angular/common';
     PatientsComponent,
     FeedbackListComponent,
      CommonModule,
-    MemberProfileComponent
-
-
+    MemberProfileComponent,
+    ReminderComponent,
+    DoctorDashboardComponent
   ],
   providers: [],
 })

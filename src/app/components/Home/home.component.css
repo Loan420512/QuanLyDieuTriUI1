@@ -1745,6 +1745,30 @@ section,
 .contact .php-email-form button[type=submit]:hover {
   background: color-mix(in srgb, var(--accent-color), transparent 20%);
 }
+/* FAQ Section Styling */
+.faq-item {
+    border-bottom: 1px solid #ddd;
+    padding: 15px 0;
+    cursor: pointer;
+  }
+
+  .faq-item h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    transition: color 0.3s;
+  }
+
+  .faq-item h3:hover {
+    color: #007BFF;
+  }
+
+  .faq-content {
+    margin-top: 10px;
+    color: #555;
+    font-size: 0.95rem;
+  }
+
+
 
 /*--------------------------------------------------------------
 # Starter Section Section

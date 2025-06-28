@@ -2,6 +2,7 @@
 
   <ng-container *ngIf="loggedIn$ | async">
     <span *ngIf="username">👤 Xin chào, {{ username }} ({{ role }})</span>
+    <a routerLink="/profile"class="hover:underline">Trang cá nhân</a>
     <button *ngIf="username" (click)="logout()">Đăng xuất</button>
   </ng-container>
 
