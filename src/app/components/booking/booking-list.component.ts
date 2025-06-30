@@ -1,8 +1,43 @@
 import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { forkJoin } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ApiService } from '../../services/api.service';
 
+// --- INTERFACES ---
+interface Booking {
+  bookingId: number;
+  dayBooking: string;
+  treatmentServiceId: number;
+  memberId: number;
+  doctorId: number;
+  statusBooking: string;
+  createAt: string;
+}
+
+interface Doctor {
+  id: number;
+  name: string;
+  specialization: string;
+  degrees: string;
+  email: string;
+  phone: string;
+  experience: string;
+  skills: string[];
+  bio: string;
+}
+
+interface Member {
+  id: number;
+  username: string;
+}
+
+interface TreatmentService {
+  id: number;
+  name: string;
+}
+
+// --- COMPONENT ---
 @Component({
   selector: 'app-booking-list',
   standalone: true,
@@ -11,98 +46,149 @@ import { ApiService } from '../../services/api.service';
   styleUrls: ['./booking-list.component.css']
 })
 export class BookingListComponent implements OnInit {
-  bookings: any[] = [];
-  member: any = null;
-  errorMessage = '';
-  selectedBooking: any = null;
-
+  // --- GIAO DIỆN ---
+  member: Member = { id: 1, username: 'Khách hàng A' }; // mô phỏng login user
+  errorMessage: string = '';
   newBooking = {
-    fullName: '',
-    email: '',
-    bookingDate: '',
-    serviceName: '',
-    memberId: 0
-  };
+  dayBooking: '',
+  treatmentServiceId: 0,
+  memberId: 0,
+  doctorId: 0,
+  statusBooking: 'Pending',
+  createAt: ''
+};
 
-  constructor(private api: ApiService) {}
+  // --- DỮ LIỆU ---
+  bookings: Booking[] = [];
+  doctors: Doctor[] = [];
+  members: Member[] = [];
+  services: TreatmentService[] = [];
+  selectedBooking: Booking | null = null;
+
+  constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
-    const stored = localStorage.getItem('currentUser');
-    if (stored) {
-      this.member = JSON.parse(stored);
+    this.loadData();
+    this.loadMockData();
+  }
+  loadMockData() {
+  this.doctors = [
+    {
+      id: 1,
+      name: 'Dr.Nguyen',
+      specialization: 'IVF Specialist',
+      degrees: 'MD',
+      email: 'dr.nguyen@example.com',
+      phone: '0901-234-567',
+      experience: '15 years',
+      skills: ['IVF', 'ICSI'],
+      bio: '...'
+    },
+    {
+      id: 2,
+      name: 'Dr.Le',
+      specialization: 'Andrology Expert',
+      degrees: 'MD',
+      email: 'dr.le@example.com',
+      phone: '0902-888-999',
+      experience: '10 years',
+      skills: ['Semen Analysis'],
+      bio: '...'
     }
+  ];
 
-    this.loadBookings();
+  this.members = [
+    { id: 1, username: 'Nguyen Van A' },
+    { id: 2, username: 'Tran Thi B' }
+  ];
+
+  this.services = [
+    { id: 1, name: 'IVF Package' },
+    { id: 2, name: 'Fertility Checkup' }
+  ];
+  }
+  // --- TẢI DỮ LIỆU ---
+  loadData() {
+    forkJoin({
+      bookings: this.http.get<Booking[]>('/api/bookings'),
+      doctors: this.http.get<Doctor[]>('/api/doctors'),
+      members: this.http.get<Member[]>('/api/members'),
+      services: this.http.get<TreatmentService[]>('/api/treatment-services'),
+    }).subscribe({
+      next: ({ bookings, doctors, members, services }) => {
+        this.bookings = bookings;
+        this.doctors = doctors;
+        this.members = members;
+        this.services = services;
+      },
+      error: err => {
+        this.errorMessage = 'Lỗi khi tải dữ liệu: ' + err.message;
+      }
+    });
   }
 
-  createBooking(): void {
-    if (!this.member?.userId) {
-      alert('Không tìm thấy thông tin người dùng!');
-      return;
+  // --- HỖ TRỢ HIỂN THỊ ---
+  getDoctorName(id: number): string {
+    return this.doctors.find(d => d.id === id)?.name || 'Không rõ';
+  }
+
+  getMemberName(id: number): string {
+    return this.members.find(m => m.id === id)?.username || 'Không rõ';
+  }
+
+  getServiceName(id: number): string {
+    return this.services.find(s => s.id === id)?.name || 'Không rõ';
+  }
+
+  // --- HÀNH ĐỘNG ---
+  viewDetails(b: Booking) {
+    this.selectedBooking = b;
+  }
+
+  cancelBooking(id: number) {
+    alert('Hủy booking ID: ' + id);
+  }
+  getSelectedDoctor(): Doctor | undefined {
+  return this.doctors.find(d => d.id === this.newBooking.doctorId);
+  }
+
+
+  createBooking() {
+  const token = localStorage.getItem('token');
+  const headers = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json'
     }
+  };
 
-    const today = new Date();
-    const bookingDate = new Date(this.newBooking.bookingDate);
-    if (bookingDate < today) {
-      alert('Ngày đặt phải là hôm nay hoặc sau hôm nay!');
-      return;
-    }
+  const booking = {
+    bookingId: 0,
+    dayBooking: this.newBooking.dayBooking,
+    treatmentServiceId: this.newBooking.treatmentServiceId,
+    memberId: this.member.id,
+    doctorId: this.newBooking.doctorId,
+    statusBooking: this.newBooking.statusBooking,
+    createAt: new Date().toISOString()
+  };
 
-    this.newBooking.memberId = this.member.userId;
-
-    this.api.createBooking(this.newBooking).subscribe({
-      next: () => {
-        alert('Đặt lịch thành công!');
-        this.loadBookings();
+  this.http.post('https://localhost:7240/api/Booking/create-booking', booking, headers)
+    .subscribe({
+      next: res => {
+        alert('Đặt lịch thành công');
         this.newBooking = {
-          fullName: '',
-          email: '',
-          bookingDate: '',
-          serviceName: '',
-          memberId: this.member.userId
+          dayBooking: '',
+          treatmentServiceId: 0,
+          memberId: 0,
+          doctorId: 0,
+          statusBooking: 'Pending',
+          createAt: ''
         };
+        this.loadData();
       },
-      error: (err) => {
-        console.error('Lỗi khi đặt lịch:', err);
-        alert('Đặt lịch thất bại!');
+      error: err => {
+        this.errorMessage = 'Lỗi tạo đặt lịch: ' + err.message;
       }
     });
-  }
-
-  loadBookings(): void {
-    this.api.getBookings().subscribe({
-      next: (data: any[]) => {
-        if (this.member) {
-          this.bookings = data.filter(b => b.memberId === this.member.userId);
-        } else {
-          this.bookings = data;
-        }
-      },
-      error: (err: any[]) => {
-        console.error('Error loading bookings:', err);
-        this.errorMessage = 'Failed to load bookings.';
-      }
-    });
-  }
-
-  viewDetails(booking: any): void {
-    this.selectedBooking = booking;
-  }
-
-  cancelBooking(id: number): void {
-    if (confirm('Bạn có chắc muốn hủy lịch?')) {
-      this.api.deleteBooking(id).subscribe({
-        next: () => {
-          this.loadBookings();
-          if (this.selectedBooking?.bookingId === id) {
-            this.selectedBooking = null;
-          }
-          alert('Đã hủy lịch thành công!');
-        },
-        error: () => {
-          alert('Không thể hủy lịch!');
-        }
-      });
-    }
-  }
+}
 }

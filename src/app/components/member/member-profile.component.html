@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" *ngIf="member">
   <div class="profile-header">
     <div class="profile-card">
       <img src="assets/img/icon.jpg" alt="Avatar" class="avatar" />
@@ -16,9 +16,7 @@
       <p>Assigned Staff: {{ member.staff }}</p>
       <p>Start Date: {{ member.startDate }}</p>
       <p>Status: <span class="status in-progress">{{ member.status }}</span></p>
-      <p>
-        📅 Next Check-In: {{ member.nextCheckIn }}
-      </p>
+      <p>📅 Next Check-In: {{ member.nextCheckIn }}</p>
       <button class="btn">View Full Schedule</button>
     </div>
   </div>

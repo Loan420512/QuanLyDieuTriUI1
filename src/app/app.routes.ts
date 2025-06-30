@@ -49,13 +49,13 @@ export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'patients', component: PatientsComponent },
    { path: 'treatment-service', component: TreatmentServiceComponent },
-   { path: 'member-profile', component: MemberProfileComponent },
+   { path: 'member-profile/:id', component: MemberProfileComponent },
 
   {
-  path: 'doctors',
+  path: 'doctor-profile/:id',
   component: DoctorDashboardComponent,
   canActivate: [AuthGuard]
-}
+  }
 
 
 

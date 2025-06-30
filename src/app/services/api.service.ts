@@ -87,20 +87,30 @@ getAdminData(): Observable<any> {
   }
 
   // ------------------ BOOKING ------------------
-  getBookings(): Observable<any[]> {
-  const token = localStorage.getItem('token'); // hoặc 'access_token' nếu bạn dùng key đó
+ getBookings(): Observable<any[]> {
+  const token = localStorage.getItem('token');
   const headers = {
     headers: {
       Authorization: `Bearer ${token}`
     }
   };
-  return this.http.get<any[]>(`${this.apiUrl}/Bookings`, headers);
-  }
+  return this.http.get<any[]>("https://localhost:7240/api/Booking", headers);
+}
 
 
-  createBooking(bookingData: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/Bookings`, bookingData);
-  }
+
+  createBooking(booking: any): Observable<any> {
+  const token = localStorage.getItem('token');
+  const headers = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  };
+
+  return this.http.post('https://localhost:7240/api/Booking/create-booking', booking, headers);
+}
+
   deleteBooking(id: number): Observable<any> {
   return this.http.delete(`${this.apiUrl}/Bookings/${id}`);
   }
@@ -109,7 +119,7 @@ getAdminData(): Observable<any> {
   }
 
   getMemberById(id: number): Observable<any> {
-  return this.http.get(`https://localhost:7240/api/Members/${id}`);
+  return this.http.get("https://localhost:7240/api/Member/create-member");
   }
 
 

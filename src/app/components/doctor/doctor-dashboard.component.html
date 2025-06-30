@@ -1,54 +1,29 @@
 <div class="dashboard">
-  <!-- Profile Section -->
-  <div class="top-section">
-    <div class="profile-card" *ngIf="doctor">
-      <img src="assets/doctor-avatar.jpg" alt="Doctor" class="avatar" />
-      <h3>{{ doctor.name }}</h3>
-      <p>{{ doctor.specialization }}</p>
-      <p>{{ doctor.degrees }}</p>
-      <p>Email: {{ doctor.email }}</p>
-      <p>Phone: {{ doctor.phone }}</p>
-      <p>Experience: {{ doctor.experience }}</p>
+  <h2>Đội ngũ bác sĩ</h2>
 
-      <div class="tags">
-        <span *ngFor="let s of doctor.skills" class="tag">{{ s }}</span>
-      </div>
-
-      <button class="edit-button">Edit Profile</button>
-    </div>
-
-    <!-- Schedule Section -->
-    <div class="schedule-card">
-      <h3>Today's Schedule</h3>
-      <table *ngIf="todaySchedule && todaySchedule.length > 0">
-        <tr *ngFor="let item of todaySchedule">
-          <td>{{ item.time }}</td>
-          <td>{{ item.patient }}</td>
-          <td>{{ item.type }}</td>
-          <td>
-            <span [ngClass]="item.status?.toLowerCase()">{{ item.status }}</span>
-          </td>
-        </tr>
-      </table>
-      <p *ngIf="todaySchedule?.length === 0">No schedule today.</p>
-      <button class="view-button">View Full Calendar</button>
-    </div>
-  </div>
-
-  <!-- Patients Section -->
-  <div class="patients-section">
-    <app-patient-list>patients</app-patient-list>
-  </div>
-
-  <!-- Active Cases -->
-  <h3>Active Treatment Cases</h3>
   <div class="cases">
-    <div class="case-card" *ngFor="let c of activeCases">
-      <p><strong>Patient:</strong> {{ c.name }}</p>
-      <p><strong>Treatment:</strong> {{ c.treatment }}</p>
-      <p><strong>Progress:</strong> {{ c.progress }}</p>
-      <p><strong>Next Appointment:</strong> {{ c.next }}</p>
-      <button>View patient record</button>
+    <div class="case-card" *ngFor="let doc of doctors">
+      <div class="top-section">
+        <img src="assets/img/doctor.jpg" class="avatar" alt="avatar" />
+        <div>
+          <h3>{{ doc.name }}</h3>
+          <p><strong>Chuyên môn:</strong> {{ doc.specialization }}</p>
+          <p><strong>Bằng cấp:</strong> {{ doc.degrees }}</p>
+          <p><strong>Email:</strong> <a href="mailto:{{ doc.email }}">{{ doc.email }}</a></p>
+          <p><strong>SĐT:</strong> {{ doc.phone }}</p>
+          <p><strong>Kinh nghiệm:</strong> {{ doc.experience }}</p>
+        </div>
+      </div>
+      <div class="tags">
+        <span class="tag" *ngFor="let skill of doc.skills">{{ skill }}</span>
+      </div>
+      <button class="edit-button" (click)="selectDoctor(doc)">Xem hồ sơ</button>
     </div>
+  </div>
+
+  <!-- ✅ Hiển thị danh sách bệnh nhân nếu role là Doctor -->
+  <div *ngIf="role === 'Doctor'" style="margin-top: 40px;">
+    <h2>Bệnh nhân của tôi</h2>
+    <app-patient-list></app-patient-list>
   </div>
 </div>

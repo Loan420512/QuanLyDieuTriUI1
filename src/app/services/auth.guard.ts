@@ -29,4 +29,26 @@ export class AuthGuard implements CanActivate {
     this.router.navigate(['/login']);
     return false;
   }
+  storeUserData(user: any): void {
+  localStorage.setItem('currentUser', JSON.stringify({
+    userId: user.userId,
+    userName: user.userName,
+    role: user.role,
+    token: user.token
+  }));
+}
+ goToProfile() {
+  const userStr = localStorage.getItem('currentUser');
+  if (userStr) {
+    const user = JSON.parse(userStr);
+    if (user.role === 'Doctor') {
+      this.router.navigate(['/doctor-profile', user.userId]);
+    } else if (user.role === 'Member') {
+      this.router.navigate(['/member-profile', user.userId]);
+    } else {
+      alert('Không xác định được vai trò người dùng.');
+    }
+  }
+}
+
 }

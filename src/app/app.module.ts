@@ -15,6 +15,7 @@ import { MemberProfileComponent } from './components/member/member-profile.compo
 import { CommonModule } from '@angular/common';
 import { ReminderComponent } from './components/reminder/reminder.component';
 import { DoctorDashboardComponent } from './components/doctor/doctor-dashboard.component';
+import { BookingListComponent } from './components/booking/booking-list.component';
 
 
 
@@ -26,7 +27,7 @@ import { DoctorDashboardComponent } from './components/doctor/doctor-dashboard.c
     BrowserModule,
     FormsModule,
     RouterModule.forRoot(routes),
-
+    BookingListComponent,
     AppComponent,
     HomeComponent,
     LoginComponent,
