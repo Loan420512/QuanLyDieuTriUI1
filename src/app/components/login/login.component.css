@@ -1,173 +1,133 @@
-
-
-
-.login-page {
-  height: 100vh;
+.form-wrapper {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(to right, #2c3e50, #bdc3c7);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-.form-container {
-  display: flex;
-  width: 900px;
-  height: 500px;
-  background: rgba(255, 255, 255, 0.95);
-  border-radius: 10px;
+  max-width: 900px;
+  margin: 60px auto;
+  border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
+  background-color: #fff;
+  animation: fadeIn 0.6s ease-in-out;
 }
 
+/* Left Panel */
 .form-left {
   flex: 1;
-  background-image: url('/assets/img/12345.jpg');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  background: linear-gradient(135deg, #2196f3, #5bc0de);
   color: white;
   padding: 40px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  text-align: center;
 }
 
-.form-left .bg-image {
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: 0.2; /* 👉 điều chỉnh độ mờ tại đây */
-  z-index: 0;
-}
 .form-left h1 {
-  font-size: 36px;
-  margin-bottom: 10px;
-  color: black;
+  font-size: 28px;
+  margin-bottom: 12px;
 }
 
-.form-left .description {
-  font-size: 14px;
-  margin-top: 10px;
-  color: black;
-   position: relative;
-  z-index: 1;
+.form-left p {
+  font-size: 16px;
+  line-height: 1.5;
 }
 
 .social-icons {
   margin-top: 20px;
 }
 
-.social-icons i {
-  font-size: 22px;
-  margin: 0 10px;
-  cursor: pointer;
+.social-icons a {
+  margin-right: 10px;
   color: white;
-  transition: transform 0.3s;
+  font-size: 18px;
+  text-decoration: none;
 }
 
-.social-icons i:hover {
-  transform: scale(1.2);
+.social-icons a:hover {
+  color: #cce6ff;
 }
 
+/* Right Panel */
 .form-right {
   flex: 1;
-  padding: 50px 40px;
+  padding: 40px;
   background: white;
 }
 
 .form-right h2 {
-  font-size: 28px;
-  margin-bottom: 30px;
+  margin-bottom: 24px;
   color: #333;
+  font-size: 24px;
 }
 
-.form-right label {
-  font-weight: bold;
-  display: block;
-  margin-bottom: 5px;
+.form-group {
+  margin-bottom: 16px;
 }
 
-.form-right input[type="email"],
-.form-right input[type="password"] {
+input[type="text"],
+input[type="password"],
+input[type="email"] {
   width: 100%;
-  padding: 10px;
-  margin-bottom: 20px;
+  padding: 12px;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 8px;
+  font-size: 15px;
+  box-sizing: border-box;
 }
 
-.terms {
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.terms input {
-  margin-right: 10px;
+input:focus {
+  outline: none;
+  border-color: #2196f3;
 }
 
 .submit-btn {
   width: 100%;
-  padding: 12px;
-  background-color: #e74c3c;
+  background-color: #2196f3;
   color: white;
-  font-weight: bold;
+  padding: 12px;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
+  font-weight: bold;
   cursor: pointer;
+  margin-top: 10px;
+  transition: background 0.3s;
 }
 
 .submit-btn:hover {
-  background-color: #c0392b;
+  background-color: #1976d2;
 }
 
-.account-link {
-  margin-top: 15px;
-  text-align: center;
+.footer-text {
+  margin-top: 16px;
   font-size: 14px;
-  color: #3498db;
+  text-align: center;
 }
 
-.account-link a {
-  color: #3498db;
+.footer-text a {
+  color: #2196f3;
   text-decoration: none;
-  margin: 0 5px;
+  font-weight: 500;
 }
 
-.social-login {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
+.footer-text a:hover {
+  text-decoration: underline;
 }
 
-.btn-google,
-.btn-facebook {
-  flex: 1;
-  padding: 10px;
-  margin-right: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  background: white;
-  cursor: pointer;
+.form-group.checkbox {
   display: flex;
   align-items: center;
-  justify-content: center;
 }
 
-.btn-google img {
-  margin-right: 8px;
+.form-group.checkbox input {
+  margin-right: 10px;
 }
 
-.btn-facebook i {
-  margin-right: 8px;
-  color: #3b5998;
-}
-
-.btn-google:hover,
-.btn-facebook:hover {
-  background-color: #f2f2f2;
+/* Fade-in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

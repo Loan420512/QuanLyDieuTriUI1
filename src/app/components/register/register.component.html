@@ -1,13 +1,22 @@
-<div class="register-wrapper">
-  <div class="register-form">
-    <form (ngSubmit)="onSubmit()" #registerForm="ngForm">
+<div class="form-wrapper">
+  <!-- LEFT SIDE -->
+  <div class="form-left">
+    <h1>Hope Fertility</h1>
+    <p>Start your journey to parenthood with care and science.</p>
+  </div>
+
+  <!-- RIGHT SIDE -->
+  <div class="form-right animate-fade-in">
+    <h2>Create Your Account</h2>
+    <form (ngSubmit)="onSubmit()" #registerForm="ngForm" novalidate>
       <div class="form-group">
         <label for="userName">Username</label>
         <input
           type="text"
           id="userName"
-          [(ngModel)]="user.Username"
           name="Username"
+          [(ngModel)]="user.Username"
+          placeholder="Enter username"
           required
         />
       </div>
@@ -17,8 +26,9 @@
         <input
           type="email"
           id="email"
-          [(ngModel)]="user.Email"
           name="Email"
+          [(ngModel)]="user.Email"
+          placeholder="Enter email"
           required
         />
       </div>
@@ -28,8 +38,9 @@
         <input
           type="password"
           id="password"
-          [(ngModel)]="user.Password"
           name="Password"
+          [(ngModel)]="user.Password"
+          placeholder="Enter password"
           required
         />
       </div>
@@ -39,15 +50,21 @@
         <input
           type="password"
           id="confirmPassword"
-          [(ngModel)]="user.ConfirmPassword"
           name="ConfirmPassword"
+          [(ngModel)]="user.ConfirmPassword"
+          placeholder="Confirm password"
           required
         />
       </div>
 
-      <button type="submit" [disabled]="!registerForm.valid">
+      <button type="submit" class="submit-btn" [disabled]="!registerForm.valid">
         Register
       </button>
+
+      <p class="footer-text">
+        Already have an account?
+        <a routerLink="/login">Login here</a>
+      </p>
     </form>
   </div>
 </div>

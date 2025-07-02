@@ -1,9 +1,27 @@
 <nav>
-
-  <ng-container *ngIf="loggedIn$ | async">
-    <span *ngIf="username">👤 Xin chào, {{ username }} ({{ role }})</span>
-    <a routerLink="/profile"class="hover:underline">Trang cá nhân</a>
-    <button *ngIf="username" (click)="logout()">Đăng xuất</button>
+  <!-- 🔓 Khi chưa đăng nhập: Hiện login/register -->
+  <ng-container *ngIf="(loggedIn$ | async) === false">
+    <a routerLink="/login" class="nav-link">Đăng nhập</a>
+    <a routerLink="/register" class="nav-link">Đăng ký</a>
   </ng-container>
 
+  <!-- 🔒 Khi đã đăng nhập: Hiện thông tin người dùng -->
+  <ng-container *ngIf="(loggedIn$ | async)">
+    <div class="user-info" *ngIf="username && role">
+      <span>👤 Xin chào, {{ username }} ({{ role }})</span>
+
+      <!-- ✅ Điều hướng theo vai trò -->
+      <a 
+        *ngIf="role === 'Doctor'" 
+        [routerLink]="['/doctor-profile']" 
+        class="nav-link">Trang cá nhân</a>
+
+      <a 
+        *ngIf="role === 'Member' || role === 'User'" 
+        [routerLink]="['/member-profile', userId]" 
+        class="nav-link">Trang cá nhân</a>
+
+      <button class="btn btn-logout" (click)="logout()">Đăng xuất</button>
+    </div>
+  </ng-container>
 </nav>

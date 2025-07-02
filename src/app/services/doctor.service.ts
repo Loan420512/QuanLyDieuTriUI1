@@ -1,10 +1,20 @@
 import { Injectable } from '@angular/core';
 import { of, Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DoctorService {
+  private apiUrl = 'https://localhost:7240'; // ✅ Sửa thành địa chỉ API của bạn
+
+  constructor(private http: HttpClient) {}
+
+  // ✅ Hàm cần thiết: Lấy bệnh nhân theo doctorId
+  getPatientsByDoctorId(doctorId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/doctors/${doctorId}/patients`);
+  }
+  
   private doctors = [
     {
       id: 1,

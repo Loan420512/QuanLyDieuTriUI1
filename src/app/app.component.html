@@ -1,47 +1,56 @@
 <div>
-  <nav>
-    <header id="header" class="header sticky-top">
-    <div class="topbar d-flex align-items-center">
-      <div class="container d-flex justify-content-center justify-content-md-between">
+  <!-- Header -->
+  <header id="header" class="header sticky-top bg-white shadow-sm">
+    <!-- Topbar -->
+    <div class="topbar py-2 border-bottom">
+      <div class="container d-flex justify-content-between align-items-center flex-wrap">
+        <!-- Contact Info -->
         <div class="contact-info d-flex align-items-center">
-          <i class="bi bi-envelope d-flex align-items-center">
-            <a href="mailto:contact&#64;example.com">contact&#64;example.com</a>
+          <i class="bi bi-envelope me-3">
+            <a href="mailto:contact@example.com" class="text-decoration-none"></a>
           </i>
-          <i class="bi bi-phone d-flex align-items-center ms-4">
-            <span>+1 5589 55488 55</span>
+          <i class="bi bi-phone">
+            <span class="ms-2">+1 5589 55488 55</span>
           </i>
         </div>
-        <div class="social-links d-none d-md-flex align-items-center">
-          <a href="#" class="twitter"><i class="bi bi-twitter-x"></i></a>
-          <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
-          <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
-          <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
+        <!-- Social Links -->
+        <div class="social-links d-flex align-items-center">
+          <a href="#" class="text-dark me-3"><i class="bi bi-twitter-x"></i></a>
+          <a href="#" class="text-dark me-3"><i class="bi bi-facebook"></i></a>
+          <a href="#" class="text-dark me-3"><i class="bi bi-instagram"></i></a>
+          <a href="#" class="text-dark"><i class="bi bi-linkedin"></i></a>
         </div>
       </div>
     </div>
-    <div class="branding d-flex align-items-center">
-      <div class="container d-flex justify-content-between align-items-center">
+
+    <!-- Main Navigation -->
+    <div class="container py-3">
+      <div class="d-flex justify-content-between align-items-center flex-wrap">
+        <!-- Logo -->
+        <a routerLink="/home" class="d-flex align-items-center text-decoration-none">
+          <h1 class="sitename m-0 text-primary">Infertility</h1>
+        </a>
+
+        <!-- Navigation Menu -->
+        <nav class="nav">
+          <a class="nav-link px-2 text-dark" routerLink="/home">Home</a>
+          <a class="nav-link px-2 text-dark" routerLink="/patients">Patients</a>
+          <a class="nav-link px-2 text-dark" routerLink="/bookings">Bookings</a>
+          <a class="nav-link px-2 text-dark" routerLink="/doctors">Doctors</a>
+          <a class="nav-link px-2 text-dark" routerLink="/feedback">Feedback</a>
+          <a class="nav-link px-2 text-dark" routerLink="/contact">Contact</a>
+          <ng-container *ngIf="!(loggedIn$ | async)">
+          <a class="nav-link px-2 text-dark" routerLink="/login">Login</a>
+          <a class="nav-link px-2 text-dark" routerLink="/register">Register</a>
+          </ng-container>
+
+        </nav>  
       </div>
     </div>
   </header>
-    <a href="index.html" class="logo d-flex align-items-center me-auto">
-          <h1 class="sitename">Infertility</h1>
-    </a>
-    <a routerLink="/home">Home</a>
-    <a routerLink="/patients">Patients</a>
-    <a routerLink="/bookings">Bookings</a>
-    <a routerLink="/doctors">Doctors</a>
-    <a routerLink="/feedback">Feedback</a>
-    <a routerLink="/contact">Contact</a>
-    <a routerLink="/login">Login</a>
-    <a routerLink="/register">Register</a>
 
-
-    <app-header></app-header> <!-- phải có dòng này -->
-    <router-outlet></router-outlet>
-
-
-  </nav>
-
-  <router-outlet></router-outlet> <!-- Component will be injected here -->
+  <!-- Custom header component, if needed -->
+  <app-header></app-header>
+  <!-- Routed content -->
+   <router-outlet></router-outlet>
 </div>

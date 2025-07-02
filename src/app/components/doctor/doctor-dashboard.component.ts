@@ -21,7 +21,7 @@ export class DoctorDashboardComponent implements OnInit {
   ngOnInit(): void {
   const stored = localStorage.getItem('currentUser');
   const user = stored ? JSON.parse(stored) : null;
-
+    
   if (!user || user.role !== 'Doctor') {
     alert('Không có quyền truy cập.');
     return;
@@ -86,7 +86,7 @@ export class DoctorDashboardComponent implements OnInit {
     alert('Không tìm thấy thông tin bác sĩ.');
   }
   }
-
+  
 
   selectDoctor(doctor: any): void {
     this.doctor = doctor;

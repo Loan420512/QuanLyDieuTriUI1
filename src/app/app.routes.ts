@@ -6,6 +6,8 @@ import { TreatmentServiceComponent } from './components/treatment/treatment-serv
 import { MemberProfileComponent } from './components/member/member-profile.component';
 import { DoctorDashboardComponent } from './components/doctor/doctor-dashboard.component';
 import { AuthGuard } from './services/auth.guard';
+import { DoctorProfileComponent } from './components/doctor-profile/doctor-profile.component';
+
 
 
 export const routes: Routes = [
@@ -43,21 +45,19 @@ export const routes: Routes = [
   {path: 'feedback', loadComponent: () => import('./components/feedback/feedback-list.component').then(m => m.FeedbackListComponent) },
   {path: 'treatment-service', loadComponent: () => import('./components/treatment/treatment-service.component').then(m => m.TreatmentServiceComponent) },
   {path: 'doctor-dashboard', loadComponent: () => import('./components/doctor/doctor-dashboard.component').then(m => m.DoctorDashboardComponent) },
-
+  
   // ✅ Regular component-based routes
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'patients', component: PatientsComponent },
    { path: 'treatment-service', component: TreatmentServiceComponent },
    { path: 'member-profile/:id', component: MemberProfileComponent },
-
+  
   {
   path: 'doctor-profile/:id',
   component: DoctorDashboardComponent,
   canActivate: [AuthGuard]
-  }
-
-
-
+  },
+   { path: 'doctor-profile', component: DoctorProfileComponent },
 
 ];

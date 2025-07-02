@@ -1,7 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { ApiService } from '../../services/api.service';
+import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+
+interface MemberBE {
+  memberId: number;
+  userId: number;
+  phoneNumber: string;
+  name: string;
+  gender: string;
+}
+
 interface MemberActivity {
   date: string;
   title: string;
@@ -24,27 +32,43 @@ interface Member {
 
 @Component({
   selector: 'app-member-profile',
-  standalone: true,
+  
+  imports: [CommonModule],
   templateUrl: './member-profile.component.html',
-  styleUrls: ['./member-profile.component.css'],
-   imports: [CommonModule]
+  styleUrls: ['./member-profile.component.css']
 })
-
 export class MemberProfileComponent implements OnInit {
-  member: Member | null = null;
+  member!: Member;
 
-  constructor(
-    private route: ActivatedRoute,
-    private apiService: ApiService
-  ) {}
+  constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
-    const memberId = Number(this.route.snapshot.paramMap.get('id'));
-    if (memberId) {
-      this.apiService.getMemberById(memberId).subscribe({
-        next: (data) => this.member = data,
-        error: (err) => console.error('Error loading member:', err)
-      });
-    }
+    const memberId = 1;
+
+    this.http.get<MemberBE>(`/api/members/${memberId}`).subscribe(beData => {
+      this.member = this.mapBackendToFrontend(beData);
+
+      // Gọi tiếp API để lấy activities
+      this.http.get<MemberActivity[]>(`https://localhost:7240/api/Member/${memberId}/activities`)
+        .subscribe(activityData => {
+          this.member.activities = activityData;
+        });
+    });
+  }
+
+  mapBackendToFrontend(be: MemberBE): Member {
+    return {
+      id: be.memberId,
+      name: be.name,
+      email: '', // Nếu cần, thêm vào từ backend
+      phone: be.phoneNumber,
+      registered: '',
+      membershipType: '',
+      staff: '',
+      startDate: '',
+      status: '',
+      nextCheckIn: '',
+      activities: [] // sẽ gán sau từ API thứ 2
+    };
   }
 }
