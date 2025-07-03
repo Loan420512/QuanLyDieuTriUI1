@@ -1,31 +1,89 @@
-<div class="container" *ngIf="member">
-  <div class="profile-header">
-    <div class="profile-card">
-      <img src="assets/img/icon.jpg" alt="Avatar" class="avatar" />
-      <h2>{{ member.name }}</h2>
-      <p>ID: {{ member.id }}</p>
-      <p>Email: <a href="mailto:{{ member.email }}">{{ member.email }}</a></p>
-      <p>Phone: {{ member.phone }}</p>
-      <p>Registered: {{ member.registered }}</p>
-      <button class="btn">Edit Profile</button>
+<div class="container mt-4">
+  <!-- Thông tin thành viên -->
+  <div class="card shadow-sm">
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+      <h4 class="mb-0">Thông tin thành viên</h4>
+      <button *ngIf="!editing" class="btn btn-light btn-sm" (click)="editing = true">✏️ Chỉnh sửa</button>
     </div>
 
-    <div class="treatment-card">
-      <h3>Membership Information</h3>
-      <p>Type: {{ member.membershipType }}</p>
-      <p>Assigned Staff: {{ member.staff }}</p>
-      <p>Start Date: {{ member.startDate }}</p>
-      <p>Status: <span class="status in-progress">{{ member.status }}</span></p>
-      <p>📅 Next Check-In: {{ member.nextCheckIn }}</p>
-      <button class="btn">View Full Schedule</button>
+    <div class="card-body">
+      <!-- Avatar -->
+      <div class="text-center mb-4">
+        <img
+         [src]="member.avatarUrl || 'https://via.placeholder.com/100'"
+         alt="Avatar"
+         class="rounded-circle shadow"
+         width="100"
+         height="100"
+         (click)="triggerAvatarInput()"
+         style="cursor: pointer"
+        />
+
+
+        <input type="file" #avatarInput hidden (change)="onAvatarChange($event)" />
+      </div>
+
+      <!-- Form chỉnh sửa -->
+      <form *ngIf="editing" name="editForm" (ngSubmit)="saveChanges()">
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label class="form-label">👤 Tên</label>
+            <input class="form-control" [(ngModel)]="member.name" name="name" required />
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">📞 Số điện thoại</label>
+            <input class="form-control" [(ngModel)]="member.phone" name="phone" required />
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label class="form-label">🧫 Giới tính</label>
+            <select class="form-select" [(ngModel)]="member.gender" name="gender">
+              <option value="">-- Chọn giới tính --</option>
+              <option value="Nam">Nam</option>
+              <option value="Nữ">Nữ</option>
+              <option value="Khác">Khác</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-end">
+          <button type="submit" class="btn btn-primary me-2">💾 Lưu</button>
+          <button type="button" class="btn btn-secondary" (click)="cancelEdit()">❌ Hủy</button>
+        </div>
+      </form>
+
+      <!-- Hiển thị chỉ đọc -->
+      <div *ngIf="!editing">
+        <div class="row mb-3">
+          <div class="col-md-6"><strong>👤 Tên:</strong> {{ member.name || '...' }}</div>
+          <div class="col-md-6"><strong>📞 Số điện thoại:</strong> {{ member.phone || '...' }}</div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-md-6"><strong>🧫 Giới tính:</strong> {{ member.gender || '...' }}</div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-md-6"><strong>🗓️ Ngày bắt đầu:</strong> {{ member.startDate || '...' }}</div>
+          <div class="col-md-6"><strong>🔑 Trạng thái:</strong> {{ member.status || '...' }}</div>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class="history">
-    <h3>Activity History</h3>
-    <div *ngFor="let item of member.activities" class="activity-item">
-      <p><strong>{{ item.date }}</strong> - {{ item.title }}</p>
-      <p class="note">{{ item.note }}</p>
+  <!-- Lịch sử hoạt động -->
+  <div class="card shadow-sm mt-4">
+    <div class="card-header bg-secondary text-white">
+      <h5 class="mb-0">Lịch sử hoạt động</h5>
     </div>
+    <ul class="list-group list-group-flush">
+      <li *ngFor="let activity of member.activities" class="list-group-item">
+        <strong>{{ activity.date | date: 'dd/MM/yyyy' }}</strong>: {{ activity.title }}<br />
+        <small class="text-muted">{{ activity.note }}</small>
+      </li>
+      <li *ngIf="!member.activities?.length" class="list-group-item text-muted">
+        Không có hoạt động nào.
+      </li>
+    </ul>
   </div>
 </div>

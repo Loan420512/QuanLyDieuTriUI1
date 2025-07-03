@@ -52,7 +52,11 @@ export const routes: Routes = [
   { path: 'patients', component: PatientsComponent },
    { path: 'treatment-service', component: TreatmentServiceComponent },
    { path: 'member-profile/:id', component: MemberProfileComponent },
-  
+  {
+  path: 'member-profile/:id',
+  loadComponent: () => import('./components/member/member-profile.component').then(m => m.MemberProfileComponent)
+},
+
   {
   path: 'doctor-profile/:id',
   component: DoctorDashboardComponent,

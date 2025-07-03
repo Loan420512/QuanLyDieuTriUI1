@@ -56,3 +56,19 @@
   margin-top: 4px;
   font-style: italic;
 }
+.card-header h4, .card-header h5 {
+  font-weight: bold;
+}
+.list-group-item {
+  font-size: 0.95rem;
+}
+img.rounded-circle {
+  object-fit: cover;
+  border: 2px solid #ccc;
+}
+.object-fit-cover {
+  object-fit: cover;
+  object-position: center;
+}
+
+

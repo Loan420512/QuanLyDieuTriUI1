@@ -1,43 +1,36 @@
 <form (ngSubmit)="createBooking()" *ngIf="member" class="booking-form">
-  <h3>Đặt lịch khám mới</h3>
+  <h3>Đặt lịch khám</h3>
 
+  <!-- Ngày khám -->
   <div class="form-group">
     <label>Ngày khám:</label>
     <input [(ngModel)]="newBooking.dayBooking" name="dayBooking" type="date" required />
   </div>
 
+  <!-- Dịch vụ -->
   <div class="form-group">
     <label>Dịch vụ:</label>
     <select [(ngModel)]="newBooking.treatmentServiceId" name="treatmentServiceId" required>
-      <option value="">-- Chọn dịch vụ --</option>
-      <option *ngFor="let s of services" [value]="s.id">{{ s.name }}</option>
+      <option [ngValue]="0" disabled>-- Chọn dịch vụ --</option>
+      <option *ngFor="let s of services" [ngValue]="s.id">{{ s.name }}</option>
     </select>
   </div>
 
-  <div class="form-group">
+  <!-- Chọn bác sĩ (ẩn nếu là bác sĩ đang đăng nhập) -->
+  <div class="form-group" *ngIf="role !== 'Doctor'">
     <label>Bác sĩ:</label>
     <select [(ngModel)]="newBooking.doctorId" name="doctorId" required>
-      <option value="">-- Chọn bác sĩ --</option>
-      <option *ngFor="let d of doctors" [value]="d.id">{{ d.name }}</option>
+      <option [ngValue]="0" disabled>-- Chọn bác sĩ --</option>
+      <option *ngFor="let d of doctors" [ngValue]="d.infoId">{{ d.fullName }}</option>
     </select>
   </div>
-  <!-- ✅ THÊM VÀO Ở ĐÂY -->
-  <div *ngIf="newBooking.doctorId">
-    <hr />
-    <h4>Thông tin bác sĩ</h4>
-    <div *ngIf="getSelectedDoctor() as doc">
-      <p><strong>Tên:</strong> {{ doc.name }}</p>
-      <p><strong>Chuyên môn:</strong> {{ doc.specialization }}</p>
-      <p><strong>Kinh nghiệm:</strong> {{ doc.experience }}</p>
-      <p><strong>Email:</strong> {{ doc.email }}</p>
-      <p><strong>Điện thoại:</strong> {{ doc.phone }}</p>
-      <p><strong>Kỹ năng:</strong>
-        <span *ngFor="let skill of doc.skills" class="badge">{{ skill }}</span>
-      </p>
-    </div>
-  </div>
 
+  <!-- Nút submit -->
   <div class="form-group">
     <button type="submit">Đặt lịch</button>
   </div>
+
+  <!-- Thông báo -->
+  <p class="success" *ngIf="successMessage">{{ successMessage }}</p>
+  <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
 </form>

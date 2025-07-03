@@ -18,9 +18,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
   constructor(private doctorService: DoctorService) {}
 
   ngOnInit(): void {
-    this.doctorService.getDoctors().subscribe({
+    this.doctorService.loadAndGetDoctors().subscribe({
       next: (data) => {
         this.doctors = data;
+        console.log('✅ Doctors:', this.doctors);
       },
       error: (err) => {
         console.error('Failed to load doctors:', err);

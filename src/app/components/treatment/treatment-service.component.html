@@ -1,54 +1,15 @@
-<div class="container mt-4">
-  <h2 class="mb-3">Quản lý dịch vụ điều trị</h2>
+<div class="treatment-service-container">
+  <h2>Danh sách Dịch vụ Khám</h2>
 
-  <!-- Form thêm/sửa -->
-  <form (ngSubmit)="onSubmit()" class="row g-3 mb-4">
-    <div class="col-md-6">
-      <input type="text" class="form-control" placeholder="Tên dịch vụ"
-             [(ngModel)]="formData.serviceName" name="serviceName" required />
-    </div>
-    <div class="col-md-6">
-      <input type="number" class="form-control" placeholder="Giá (VND)"
-             [(ngModel)]="formData.price" name="price" required />
-    </div>
-    <div class="col-md-6">
-      <input type="number" class="form-control" placeholder="Thời gian (phút)"
-             [(ngModel)]="formData.durationInMinutes" name="durationInMinutes" />
-    </div>
-    <div class="col-md-12">
-      <textarea class="form-control" placeholder="Mô tả"
-                [(ngModel)]="formData.description" name="description"></textarea>
-    </div>
-    <div class="col-md-12">
-      <button type="submit" class="btn btn-primary me-2">
-        {{ isEditing ? 'Cập nhật' : 'Thêm mới' }}
-      </button>
-      <button type="button" class="btn btn-secondary" (click)="resetForm()">Hủy</button>
-    </div>
-  </form>
+  <ul>
+    <li *ngFor="let service of services">
+      🩺 {{ service.name }}
+    </li>
+  </ul>
 
-  <!-- Bảng danh sách dịch vụ -->
-  <table class="table table-bordered table-hover">
-    <thead>
-      <tr>
-        <th>Tên dịch vụ</th>
-        <th>Giá</th>
-        <th>Thời gian (phút)</th>
-        <th>Mô tả</th>
-        <th>Thao tác</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let s of services">
-        <td>{{ s.serviceName }}</td>
-        <td>{{ s.price | number:'1.0-0' }} ₫</td>
-        <td>{{ s.durationInMinutes }}</td>
-        <td>{{ s.description }}</td>
-        <td>
-          <button class="btn btn-sm btn-warning me-1" (click)="edit(s)">Sửa</button>
-          <button class="btn btn-sm btn-danger" (click)="delete(s.serviceID)">Xóa</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <h3>Thêm Dịch vụ Mới</h3>
+  <input [(ngModel)]="newServiceName" placeholder="Tên dịch vụ mới" />
+  <button (click)="addService()">➕ Thêm</button>
+
+  <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
 </div>

@@ -1,21 +1,28 @@
-<div class="container">
-  <h2>Trang cá nhân bác sĩ</h2>
-
-  <div class="doctor-info">
-    <p><strong>Tên:</strong> {{ doctor.name }}</p>
-    <p><strong>Email:</strong> {{ doctor.email }}</p>
+<div class="container mt-4">
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <h4 class="card-title">👨‍⚕️ Thông tin bác sĩ</h4>
+      <p><strong>Tên:</strong> {{ doctor.name }}</p>
+      <p><strong>Email:</strong> {{ doctor.email }}</p>
+    </div>
   </div>
 
-  <hr />
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h5 class="card-title">🧑‍🤝‍🧑 Bệnh nhân đang theo dõi</h5>
 
-  <h3>Danh sách bệnh nhân đang theo dõi</h3>
-  <ul *ngIf="patients.length > 0; else noPatients">
-    <li *ngFor="let p of patients">
-      <strong>{{ p.name }}</strong> – {{ p.treatment }} – {{ p.status }}
-    </li>
-  </ul>
+      <ul class="list-group" *ngIf="patients.length > 0; else noPatients">
+        <li class="list-group-item" *ngFor="let p of patients">
+          <strong>{{ p.name }}</strong> – {{ p.treatment }} – 
+          <span [ngClass]="{ 'text-success': p.status === 'Đang điều trị', 'text-danger': p.status !== 'Đang điều trị' }">
+            {{ p.status }}
+          </span>
+        </li>
+      </ul>
 
-  <ng-template #noPatients>
-    <p>Không có bệnh nhân nào đang theo dõi.</p>
-  </ng-template>
+      <ng-template #noPatients>
+        <p class="text-muted">Không có bệnh nhân nào đang theo dõi.</p>
+      </ng-template>
+    </div>
+  </div>
 </div>

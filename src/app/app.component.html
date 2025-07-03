@@ -13,6 +13,7 @@
             <span class="ms-2">+1 5589 55488 55</span>
           </i>
         </div>
+
         <!-- Social Links -->
         <div class="social-links d-flex align-items-center">
           <a href="#" class="text-dark me-3"><i class="bi bi-twitter-x"></i></a>
@@ -31,26 +32,57 @@
           <h1 class="sitename m-0 text-primary">Infertility</h1>
         </a>
 
-        <!-- Navigation Menu -->
-        <nav class="nav">
-          <a class="nav-link px-2 text-dark" routerLink="/home">Home</a>
-          <a class="nav-link px-2 text-dark" routerLink="/patients">Patients</a>
-          <a class="nav-link px-2 text-dark" routerLink="/bookings">Bookings</a>
-          <a class="nav-link px-2 text-dark" routerLink="/doctors">Doctors</a>
-          <a class="nav-link px-2 text-dark" routerLink="/feedback">Feedback</a>
-          <a class="nav-link px-2 text-dark" routerLink="/contact">Contact</a>
+        <!-- Navigation + Account -->
+        <div class="d-flex align-items-center gap-4">
+          <!-- Menu -->
+          <nav class="nav">
+            <a class="nav-link px-2 text-dark" routerLink="/home">Home</a>
+
+            <!-- ❌ Ẩn với Member/User -->
+            <ng-container *ngIf="role !== 'Member' && role !== 'User'">
+              <a class="nav-link px-2 text-dark" routerLink="/patients">Patients</a>
+            </ng-container>
+
+            <a class="nav-link px-2 text-dark" routerLink="/doctor">Doctors</a>
+
+            <!-- ❌ Ẩn với Doctor -->
+            <ng-container *ngIf="role !== 'Doctor'">
+              <a class="nav-link px-2 text-dark" routerLink="/bookings">Bookings</a>
+              <a class="nav-link px-2 text-dark" routerLink="/feedback">Feedback</a>
+            </ng-container>
+
+            <a class="nav-link px-2 text-dark" routerLink="/contact">Contact</a>
+          </nav>
+
+          <!-- 🔓 Nếu chưa đăng nhập -->
           <ng-container *ngIf="!(loggedIn$ | async)">
-          <a class="nav-link px-2 text-dark" routerLink="/login">Login</a>
-          <a class="nav-link px-2 text-dark" routerLink="/register">Register</a>
+            <a class="nav-link px-2 text-dark" routerLink="/login">Login</a>
+            <a class="nav-link px-2 text-dark" routerLink="/register">Register</a>
           </ng-container>
 
-        </nav>  
+          <!-- 🔒 Nếu đã đăng nhập -->
+          <ng-container *ngIf="loggedIn$ | async">
+            <div class="dropdown">
+              <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                👤 {{ username }} ({{ role }})
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li>
+                  <a *ngIf="role === 'Doctor'" class="dropdown-item" [routerLink]="['/doctor-profile']">Trang cá nhân</a>
+                  <a *ngIf="role === 'Member' || role === 'User'" class="dropdown-item" [routerLink]="['/member-profile', userId]">Trang cá nhân</a>
+                </li>
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                  <button class="dropdown-item text-danger" (click)="logout()">Đăng xuất</button>
+                </li>
+              </ul>
+            </div>
+          </ng-container>
+        </div>
       </div>
     </div>
   </header>
 
-  <!-- Custom header component, if needed -->
-  <app-header></app-header>
-  <!-- Routed content -->
-   <router-outlet></router-outlet>
+  <!-- Nội dung các route -->
+  <router-outlet></router-outlet>
 </div>

@@ -27,3 +27,15 @@
   background: #1976d2;
   color: white;
 }
+.dropdown {
+  position: relative;
+}
+
+.dropdown-menu {
+  min-width: 180px;
+  font-size: 0.95rem;
+}
+
+.dropdown-item {
+  cursor: pointer;
+}

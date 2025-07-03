@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
-import { HeaderComponent } from './components/header/header.component';
 import { AuthService } from './services/auth.service';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -11,7 +10,6 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [
     RouterModule,
-    HeaderComponent,
     CommonModule
   ],
   templateUrl: './app.component.html',
@@ -37,20 +35,25 @@ export class AppComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // 1. Đọc từ localStorage (trường hợp user đã đăng nhập trước đó)
+    this.loggedIn$ = this.authService.loggedIn$;
+
+    // Đọc user từ localStorage nếu đã đăng nhập
     const stored = localStorage.getItem('currentUser');
     const user = stored ? JSON.parse(stored) : null;
-     this.loggedIn$ = this.authService.loggedIn$;
     if (user) {
-      this.username = user.userName || ''; // Chú ý tên đúng là `userName`
+      this.username = user.userName || '';
       this.userId = user.userId || 0;
       this.role = user.role || '';
       this.profileRoute = this.role === 'Doctor' ? '/doctor-profile' : '/member-profile';
     }
 
-    // 2. Đăng ký theo dõi username và trạng thái đăng nhập
+    // Theo dõi trạng thái đăng nhập và tên người dùng
     this.authService.username$.subscribe(name => {
       this.username = name ?? '';
+    });
+
+    this.authService.role$.subscribe(r => {
+      this.role = r ?? '';
     });
 
     this.authService.loggedIn$.subscribe(status => {

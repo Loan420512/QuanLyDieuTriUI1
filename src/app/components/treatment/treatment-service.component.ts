@@ -1,60 +1,80 @@
 import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
+
+interface TreatmentService {
+  id: number;
+  name: string;
+}
 
 @Component({
   selector: 'app-treatment-service',
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './treatment-service.component.html',
+  styleUrls: ['./treatment-service.component.css']
 })
 export class TreatmentServiceComponent implements OnInit {
-  services: any[] = [];
-  formData: any = {};
-  isEditing: boolean = false;
+  services: TreatmentService[] = [];
+  newServiceName: string = '';
+  errorMessage = '';
 
   constructor(private http: HttpClient) {}
 
-  ngOnInit() {
-    this.getAll();
+  ngOnInit(): void {
+    this.loadServices();
   }
 
-  getAll() {
-    this.http.get<any[]>('https://localhost:5001/api/TreatmentService')
-      .subscribe(data => this.services = data);
+  loadServices() {
+    const token = localStorage.getItem('token');
+    const headers = {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    };
+
+    this.http.get<TreatmentService[]>('https://localhost:7240/api/TreatmentService', headers)
+      .subscribe({
+        next: (data) => {
+          this.services = data;
+        },
+        error: (err) => {
+          console.error('Lỗi khi tải dịch vụ:', err);
+          this.errorMessage = 'Không thể tải danh sách dịch vụ.';
+        }
+      });
   }
 
-  onSubmit() {
-    if (this.isEditing) {
-      this.http.put(`https://localhost:5001/api/TreatmentService/${this.formData.serviceID}`, this.formData)
-        .subscribe(() => {
-          this.getAll();
-          this.resetForm();
-        });
-    } else {
-      this.http.post('https://localhost:5001/api/TreatmentService', this.formData)
-        .subscribe(() => {
-          this.getAll();
-          this.resetForm();
-        });
+  addService() {
+    if (!this.newServiceName.trim()) {
+      this.errorMessage = 'Tên dịch vụ không được để trống.';
+      return;
     }
-  }
 
-  edit(service: any) {
-    this.formData = { ...service };
-    this.isEditing = true;
-  }
+    const token = localStorage.getItem('token');
+    const headers = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    };
 
-  delete(id: number) {
-    if (confirm('Bạn có chắc chắn muốn xóa dịch vụ này?')) {
-      this.http.delete(`https://localhost:5001/api/TreatmentService/${id}`)
-        .subscribe(() => this.getAll());
-    }
-  }
+    const newService = {
+      id: 0,
+      name: this.newServiceName.trim()
+    };
 
-  resetForm() {
-    this.formData = {};
-    this.isEditing = false;
+    this.http.post('https://localhost:7240/api/TreatmentService', newService, headers)
+      .subscribe({
+        next: () => {
+          this.newServiceName = '';
+          this.loadServices();
+        },
+        error: (err) => {
+          console.error('Lỗi khi thêm dịch vụ:', err);
+          this.errorMessage = 'Không thể thêm dịch vụ.';
+        }
+      });
   }
 }
