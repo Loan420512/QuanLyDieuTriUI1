@@ -1,36 +1,74 @@
-<form (ngSubmit)="createBooking()" *ngIf="member" class="booking-form">
-  <h3>Đặt lịch khám</h3>
-
-  <!-- Ngày khám -->
-  <div class="form-group">
-    <label>Ngày khám:</label>
-    <input [(ngModel)]="newBooking.dayBooking" name="dayBooking" type="date" required />
-  </div>
-
-  <!-- Dịch vụ -->
-  <div class="form-group">
-    <label>Dịch vụ:</label>
-    <select [(ngModel)]="newBooking.treatmentServiceId" name="treatmentServiceId" required>
-      <option [ngValue]="0" disabled>-- Chọn dịch vụ --</option>
-      <option *ngFor="let s of services" [ngValue]="s.id">{{ s.name }}</option>
-    </select>
-  </div>
-
-  <!-- Chọn bác sĩ (ẩn nếu là bác sĩ đang đăng nhập) -->
-  <div class="form-group" *ngIf="role !== 'Doctor'">
-    <label>Bác sĩ:</label>
-    <select [(ngModel)]="newBooking.doctorId" name="doctorId" required>
-      <option [ngValue]="0" disabled>-- Chọn bác sĩ --</option>
-      <option *ngFor="let d of doctors" [ngValue]="d.infoId">{{ d.fullName }}</option>
-    </select>
-  </div>
-
-  <!-- Nút submit -->
-  <div class="form-group">
-    <button type="submit">Đặt lịch</button>
-  </div>
+<div class="container mt-4">
+  <h2 class="mb-3">Đặt lịch khám</h2>
 
   <!-- Thông báo -->
-  <p class="success" *ngIf="successMessage">{{ successMessage }}</p>
-  <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
-</form>
+  <div *ngIf="successMessage" class="alert alert-success">
+    {{ successMessage }}
+  </div>
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Form đặt lịch -->
+  <form (ngSubmit)="createBooking()">
+    <div class="form-group mb-3">
+      <label for="dayBooking">Ngày khám:</label>
+      <input
+        type="date"
+        id="dayBooking"
+        class="form-control"
+        [(ngModel)]="newBooking.dayBooking"
+        name="dayBooking"
+        [min]="today"
+        required
+      />
+    </div>
+
+    <div class="form-group mb-3">
+      <label for="treatmentService">Dịch vụ:</label>
+      <select
+        id="treatmentService"
+        class="form-select"
+        [(ngModel)]="newBooking.treatmentServiceId"
+        name="treatmentServiceId"
+        required
+      >
+        <option [value]="0" disabled>-- Chọn dịch vụ --</option>
+        <option *ngFor="let service of services" [value]="service.id">
+          {{ service.name }}
+        </option>
+      </select>
+    </div>
+
+    <div class="form-group mb-3">
+      <label for="doctor">Bác sĩ:</label>
+      <select
+        id="doctor"
+        class="form-select"
+        [(ngModel)]="newBooking.doctorId"
+        name="doctorId"
+        required
+      >
+        <option [value]="0" disabled>-- Chọn bác sĩ --</option>
+        <option *ngFor="let doctor of doctors" [value]="doctor.infoId">
+          {{ doctor.fullName }} ({{ doctor.speciality }})
+        </option>
+      </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Đặt lịch</button>
+  </form>
+
+  <!-- Danh sách lịch hẹn nếu có -->
+  <div *ngIf="bookings.length > 0" class="mt-4">
+    <h4>Lịch khám đã đặt:</h4>
+    <ul class="list-group">
+      <li *ngFor="let b of bookings" class="list-group-item">
+        <strong>Ngày:</strong> {{ b.dayBooking }} |
+        <strong>Bác sĩ:</strong> {{ b.doctorId }} |
+        <strong>Dịch vụ:</strong> {{ b.treatmentServiceId }} |
+        <strong>Trạng thái:</strong> {{ b.statusBooking }}
+      </li>
+    </ul>
+  </div>
+</div>

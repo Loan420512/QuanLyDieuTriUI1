@@ -17,16 +17,7 @@ interface Doctor {
   infoId: number;
   fullName: string;
   speciality: string;
-  degree: string;
-  phoneNumber: string;
-  experianYear: number;
-  certificate: string;
   userId: number;
-}
-
-interface Member {
-  id: number;
-  username: string;
 }
 
 interface TreatmentService {
@@ -42,108 +33,209 @@ interface TreatmentService {
   styleUrls: ['./booking-list.component.css']
 })
 export class BookingListComponent implements OnInit {
-  member: Member = { id: 1, username: 'Khách hàng A' };
-
   newBooking = {
     dayBooking: '',
     treatmentServiceId: 0,
-    memberId: 0,
     doctorId: 0,
     statusBooking: 'Pending',
     createAt: ''
   };
 
+  bookings: Booking[] = [];
   doctors: Doctor[] = [];
   services: TreatmentService[] = [];
+  patients: any[] = [];
+
+  role: string = '';
+  member = {
+    id: 0,
+    username: ''
+  };
+
+  today: string = new Date().toISOString().split('T')[0];
   errorMessage = '';
   successMessage = '';
-  role: string = '';
 
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
-    const userJson = localStorage.getItem('currentUser');
-    const user = userJson ? JSON.parse(userJson) : null;
-    this.role = user?.role || '';
-    this.loadData();
-  }
-
-  loadData(): void {
-    const token = localStorage.getItem('token');
-    const headers = token ? { headers: new HttpHeaders({ Authorization: `Bearer ${token}` }) } : {};
-
-    this.http.get<Doctor[]>('https://localhost:7240/api/InfoDoctor', headers).subscribe({
-      next: data => this.doctors = Array.isArray(data) ? data : data['data'] || [],
-      error: err => this.errorMessage = 'Lỗi tải bác sĩ: ' + err.message
-    });
-
-    this.http.get<TreatmentService[]>('https://localhost:7240/api/TreatmentService', headers).subscribe({
-      next: data => this.services = Array.isArray(data) ? data : data['data'] || [],
-      error: err => this.errorMessage = 'Lỗi tải dịch vụ: ' + err.message
-    });
-  }
-
-  createBooking(): void {
-    this.errorMessage = '';
-    this.successMessage = '';
-
-    const userJson = localStorage.getItem('currentUser');
-    const user = userJson ? JSON.parse(userJson) : null;
-
-    if (!user || !user.userId) {
-      this.errorMessage = 'Không tìm thấy người dùng đăng nhập.';
+    const user = this.getUser();
+    if (!user) {
+      this.errorMessage = 'Bạn chưa đăng nhập.';
       return;
     }
 
-    // Nếu role là Doctor → tự động chọn doctorId
+    this.role = user.role;
+    this.member = {
+      id: user.userId,
+      username: user.userName || 'Khách'
+    };
+
+    this.loadDoctorsAndServices();
+
     if (this.role === 'Doctor') {
-      const doctor = this.doctors.find(d => d.userId === user.userId);
-      if (!doctor) {
-        this.errorMessage = 'Không tìm thấy bác sĩ tương ứng với tài khoản.';
-        return;
-      }
-      this.newBooking.doctorId = doctor.infoId;
+      this.loadBookingsByDoctor();
+    } else if (this.role === 'User') {
+      this.loadBookingsByMember();
     }
+  }
 
-    // Kiểm tra dữ liệu
-    if (!this.newBooking.dayBooking || this.newBooking.treatmentServiceId === 0 || this.newBooking.doctorId === 0) {
-      this.errorMessage = 'Vui lòng điền đầy đủ thông tin.';
-      return;
-    }
+  getUser() {
+    const userJson = localStorage.getItem('currentUser');
+    return userJson ? JSON.parse(userJson) : null;
+  }
 
+  getHeaders(): HttpHeaders {
     const token = localStorage.getItem('token');
-    const headers = {
-      headers: new HttpHeaders({
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      })
-    };
+    return new HttpHeaders({ Authorization: `Bearer ${token}` });
+  }
 
-    const bookingPayload = {
-      bookingId: 0,
-      dayBooking: new Date(this.newBooking.dayBooking).toISOString(),
-      treatmentServiceId: this.newBooking.treatmentServiceId,
-      memberId: this.member.id,
-      doctorId: this.newBooking.doctorId,
-      statusBooking: 'Pending',
-      createAt: new Date().toISOString()
-    };
+  loadDoctorsAndServices(): void {
+    const headers = { headers: this.getHeaders() };
 
-    this.http.post('https://localhost:7240/api/Booking/create-booking', bookingPayload, headers).subscribe({
-      next: res => {
-        this.successMessage = 'Đặt lịch thành công!';
-        this.newBooking = {
-          dayBooking: '',
-          treatmentServiceId: 0,
-          memberId: 0,
-          doctorId: 0,
-          statusBooking: 'Pending',
-          createAt: ''
-        };
+    this.http.get<any>('https://localhost:7240/api/InfoDoctor', headers).subscribe({
+      next: data => {
+        this.doctors = Array.isArray(data) ? data : data.data || [];
       },
       error: err => {
-        this.errorMessage = err.error?.message || 'Đặt lịch thất bại';
+        this.errorMessage = 'Lỗi tải bác sĩ: ' + (err.message || 'Không xác định');
       }
     });
+
+    this.http.get<any>('https://localhost:7240/api/TreatmentService', headers).subscribe({
+      next: data => {
+        this.services = Array.isArray(data) ? data : data.data || [];
+      },
+      error: err => {
+        this.errorMessage = 'Lỗi tải dịch vụ: ' + (err.message || 'Không xác định');
+      }
+    });
+  }
+
+ loadBookingsByDoctor(): void {
+  const headers = { headers: this.getHeaders() };
+
+  this.http.get<any>('https://localhost:7240/api/Booking/search-by-doctor?page=1', headers).subscribe({
+    next: res => {
+      this.bookings = res.data || res.Data || [];
+      console.log('📥 Bookings from API:', this.bookings);
+    },
+    error: err => {
+      console.error('❌ Không thể tải danh sách booking:', err);
+    }
+  });
+  }
+
+  loadBookingsByMember(): void {
+    const headers = { headers: this.getHeaders() };
+
+    this.http.get<any>('https://localhost:7240/api/Booking/my-bookings?page=1', headers).subscribe({
+      next: res => {
+        this.bookings = res.data || res.Data || [];
+        console.log('📥 Bookings:', this.bookings);
+      },
+      error: err => {
+        this.errorMessage = 'Không thể tải lịch hẹn của bạn: ' + (err.message || 'Không xác định');
+      }
+    });
+  }
+  loadPatients(): void {
+  const headers = { headers: this.getHeaders() };
+  this.http.get<any>('https://localhost:7240/api/Booking/search-by-doctor?page=1', headers).subscribe({
+    next: res => {
+      const bookings = res.data || res.Data || [];
+
+      // Gộp dữ liệu theo bệnh nhân (có thể thêm API lấy tên thật)
+      this.patients = bookings.map((b: any) => ({
+        name: `Bệnh nhân #${b.memberId}`,  // Tạm thời hiển thị theo ID
+        treatment: `Dịch vụ #${b.treatmentServiceId}`,
+        status: b.statusBooking
+      }));
+    },
+    error: err => {
+      console.error('Lỗi khi tải danh sách bệnh nhân:', err);
+      this.patients = [];
+    }
+  });
+}
+
+
+ createBooking(): void {
+  this.errorMessage = '';
+  this.successMessage = '';
+
+  const user = this.getUser();
+  if (!user || this.role !== 'User') {
+    this.errorMessage = 'Chỉ người dùng mới có thể đặt lịch.';
+    return;
+  }
+
+  // Kiểm tra dữ liệu nhập
+  if (
+    !this.newBooking.dayBooking ||
+    !this.newBooking.treatmentServiceId ||
+    !this.newBooking.doctorId
+  ) {
+    this.errorMessage = 'Vui lòng điền đầy đủ thông tin.';
+    return;
+  }
+
+  // ✅ Chuyển định dạng yyyy-MM-dd (DateOnly)
+  const formatDate = (dateStr: string): string => {
+    const d = new Date(dateStr);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+  // ✅ Bọc payload đúng yêu cầu backend
+  const bookingPayload = {
+    bookingReq: {
+      bookingId: 0,
+      dayBooking: formatDate(this.newBooking.dayBooking),
+      treatmentServiceId: Number(this.newBooking.treatmentServiceId),
+      doctorId: Number(this.newBooking.doctorId),
+      statusBooking: 'Pending',
+      createAt: formatDate(new Date().toISOString())
+    }
+  };
+
+  const headers = {
+    headers: this.getHeaders().set('Content-Type', 'application/json')
+  };
+
+  console.log('📤 Payload gửi đi:', bookingPayload);
+
+  this.http
+    .post<any>('https://localhost:7240/api/Booking/create-booking', bookingPayload, headers)
+    .subscribe({
+      next: (res) => {
+        console.log('✅ Response:', res);
+        if (res.success) {
+          this.successMessage = 'Đặt lịch thành công!';
+          this.resetForm();
+          this.loadBookingsByMember();
+        } else {
+          this.errorMessage = res.message || 'Đặt lịch thất bại.';
+        }
+      },
+      error: (err) => {
+        console.error('❌ Lỗi backend:', err);
+        alert('❌ Lỗi backend: ' + JSON.stringify(err.error));
+        this.errorMessage = err.error?.message || 'Lỗi hệ thống khi đặt lịch.';
+      }
+    });
+}
+
+
+  resetForm(): void {
+    this.newBooking = {
+      dayBooking: '',
+      treatmentServiceId: 0,
+      doctorId: 0,
+      statusBooking: 'Pending',
+      createAt: ''
+    };
   }
 }

@@ -1,20 +1,21 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { PatientService, Patient } from '../../services/patient.service';
-import { ReminderService } from '../../services/reminder.service';
-import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { PatientService } from '../../services/patient.service';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-patient-list',
-  standalone: true,
   templateUrl: './patient-list.component.html',
   styleUrls: ['./patient-list.component.css'],
+  standalone: true,
   imports: [CommonModule, FormsModule]
 })
 export class PatientsComponent implements OnInit {
-  patients: Patient[] = [];
-  selectedPatient: any;
+  bookings: any[] = [];
+  selectedBooking: any = null;
+  selectedMemberInfo: any = null;
+  notifications: any[] = [];
 
   reminderForm = {
     medicineTime: '',
@@ -22,33 +23,68 @@ export class PatientsComponent implements OnInit {
     method: 'email'
   };
 
+  newBooking = {
+    dayBooking: '',
+    treatmentServiceId: 0,
+    doctorId: 0,
+    statusBooking: 'Pending',
+    createAt: ''
+  };
+
   constructor(
     private patientService: PatientService,
-    private reminderService: ReminderService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
-  const stored = localStorage.getItem('currentUser');
-  const doctor = stored ? JSON.parse(stored) : null;
+    this.patientService.getMyDoctorInfo().subscribe({
+      next: () => this.loadDoctorBookings(),
+      error: () => this.router.navigate(['/unauthorized'])
+    });
+  }
+  
 
-  // Kiểm tra xem có đăng nhập và có phải bác sĩ không
-  if (!doctor || doctor.role !== 'Doctor') {
-    // Không phải bác sĩ thì chuyển về trang không có quyền
-    this.router.navigate(['/unauthorized']);
-    return;
+  loadDoctorBookings(): void {
+    this.patientService.getBookingsByDoctor().subscribe({
+      next: (res) => {
+        this.bookings = res.data || res || [];
+
+        this.bookings.forEach(b => {
+          // 🟦 Bổ sung thông tin Member nếu thiếu
+          if (!b.member?.fullName && b.memberId) {
+            this.patientService.getMemberById(b.memberId).subscribe({
+              next: (res) => {
+                b.member = res?.data || { fullName: `BN #${b.memberId}` };
+              },
+              error: (err) => {
+                console.warn('❌ Lỗi lấy Member:', err);
+                b.member = { fullName: `BN #${b.memberId}` };
+              }
+            });
+          }
+
+          // 🟦 Bổ sung thông tin Dịch vụ nếu thiếu
+          if (!b.treatmentService?.name && b.treatmentServiceId) {
+            this.patientService.getTreatmentServiceById(b.treatmentServiceId).subscribe({
+              next: (res) => {
+                b.treatmentService = res?.data || { name: `Dịch vụ #${b.treatmentServiceId}` };
+              },
+              error: (err) => {
+                console.warn('❌ Lỗi lấy Dịch vụ:', err);
+                b.treatmentService = { name: `Dịch vụ #${b.treatmentServiceId}` };
+              }
+            });
+          }
+        });
+      },
+      error: (err) => {
+        console.error('❌ Lỗi tải lịch khám:', err);
+      }
+    });
   }
 
-  // Nếu là bác sĩ thì gọi API lấy danh sách bệnh nhân
-  this.patientService.getPatientsByDoctor(doctor.userId).subscribe({
-    next: (data: Patient[]) => this.patients = data,
-    error: (err: any) => console.error('Lỗi tải bệnh nhân:', err)
-  });
-  }
-
-
-  selectPatient(patient: any) {
-    this.selectedPatient = patient;
+  selectBooking(booking: any): void {
+    this.selectedBooking = booking;
     this.reminderForm = {
       medicineTime: '',
       appointmentDate: '',
@@ -56,39 +92,57 @@ export class PatientsComponent implements OnInit {
     };
   }
 
-  sendReminder() {
-    if (!this.selectedPatient) return;
+  cancelReminder(): void {
+    this.selectedBooking = null;
+  }
+
+  sendReminder(): void {
+    if (!this.selectedBooking) return;
 
     const payload = {
-      patientId: this.selectedPatient.id,
-      ...this.reminderForm
+      memberId: this.selectedBooking.member?.memberId,
+      email: this.selectedBooking.member?.email,
+      medicineTime: this.reminderForm.medicineTime,
+      appointmentDate: this.reminderForm.appointmentDate,
+      method: this.reminderForm.method
     };
 
-    this.reminderService.sendReminder(payload).subscribe({
-      next: () => {
-        alert('Gửi nhắc nhở thành công!');
-        this.selectedPatient = null;
-      },
-      error: () => {
-        alert('Gửi nhắc nhở thất bại!');
-      }
-    });
-  }
+    console.log('📤 Nhắc nhở gửi:', payload);
 
-  loadPatients(): void {
-    this.patientService.getPatients().subscribe({
-      next: (data) => {
-        this.patients = data;
+    this.patientService.sendReminder(payload).subscribe({
+      next: () => {
+        alert('✅ Đã gửi nhắc nhở!');
+        this.cancelReminder();
       },
       error: (err) => {
-        console.error('Lỗi khi tải danh sách bệnh nhân:', err);
+        console.error('❌ Lỗi gửi nhắc nhở:', err);
+        alert('❌ Gửi nhắc nhở thất bại!');
       }
     });
   }
 
-  deletePatient(id: number) {
-    this.patientService.deletePatient(id).subscribe(() => {
-      this.patients = this.patients.filter(p => p.id !== id);
-    });
-  }
+  showMemberDetails(memberId: number): void {
+  this.patientService.getMemberById(memberId).subscribe({
+    next: (res) => {
+      this.selectedMemberInfo = res?.data || null;
+    },
+    error: () => {
+      this.selectedMemberInfo = null;
+    }
+  });
+}
+loadNotifications(): void {
+  const user = JSON.parse(localStorage.getItem('currentUser') || '{}');
+  const userId = user.userId;
+
+  this.patientService.getMyNotifications(userId).subscribe({
+    next: (res) => {
+      this.notifications = res.data || res;
+      console.log('🔔 Notifications:', this.notifications);
+    },
+    error: (err) => {
+      console.error('❌ Lỗi tải thông báo:', err);
+    }
+  });
+}
 }

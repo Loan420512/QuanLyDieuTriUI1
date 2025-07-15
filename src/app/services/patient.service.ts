@@ -1,62 +1,73 @@
-// src/app/services/patient.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { catchError } from 'rxjs/operators';
-import { Observable, of, throwError } from 'rxjs';
+import { Observable } from 'rxjs';
 
-// 👉 Interface cho bệnh nhân (có thể sửa thêm nếu cần)
-export interface Patient {
-  id: number;
-  fullName: string;
-  email: string;
-  doctorId: number;
-  dob?: string;
-   gender?: string;
-}
-
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class PatientService {
-  private apiUrl = 'https://localhost:5001/api/member'; // hoặc 5001 nếu ASP.NET Core
+  private bookingUrl = 'https://localhost:7240/api/Booking';
+  private doctorUrl = 'https://localhost:7240/api/InfoDoctor';
+  private reminderUrl = 'https://localhost:7240/api/Reminder';
 
   constructor(private http: HttpClient) {}
 
-  getPatients(): Observable<Patient[]> {
-    return this.http.get<Patient[]>(this.apiUrl).pipe(
-      catchError((error) => {
-        console.error('Failed to fetch patients:', error);
-        return of([]);
-      })
-    );
+  // 🔹 Gọi API booking theo bác sĩ (dựa vào token)
+  getBookingsByDoctor(): Observable<any> {
+  const token = localStorage.getItem('token');
+  const headers = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
+  return this.http.get<any>(`${this.bookingUrl}/search-by-doctor?page=1`, headers);
   }
 
 
-  addPatient(patient: Patient): Observable<Patient> {
-    return this.http.post<Patient>(this.apiUrl, patient).pipe(
-      catchError((error) => {
-        console.error('Failed to add patient:', error);
-        return throwError(() => new Error('Add patient failed'));
-      })
-    );
+  // 🔹 Lấy thông tin doctor từ token
+  getMyDoctorInfo(): Observable<any> {
+    const token = localStorage.getItem('token');
+    const headers = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
+    return this.http.get<any>(`${this.doctorUrl}/my-info`, headers);
   }
 
-  deletePatient(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/${id}`).pipe(
-      catchError((error) => {
-        console.error('Failed to delete patient:', error);
-        return throwError(() => new Error('Delete failed'));
-      })
-    );
+  // 🔹 Gửi nhắc nhở đến bệnh nhân
+  sendReminder(payload: any): Observable<any> {
+    const token = localStorage.getItem('token');
+    const headers = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
+    return this.http.post(`https://localhost:7240/api/Notification/create-notification`, payload, headers);
   }
-  getPatientsByDoctor(doctorId: number): Observable<Patient[]> {
-  const url = `${this.apiUrl}?doctorId=${doctorId}`;
- return this.http.get<Patient[]>(`${this.apiUrl}/patients-by-doctor/${doctorId}`).pipe(
-    catchError((error) => {
-      console.error('Failed to fetch patients by doctor:', error);
-      return of([]);
-    })
-  );
+
+  // 🔹 Gửi booking (User tạo lịch khám)
+  createBooking(booking: any): Observable<any> {
+    const token = localStorage.getItem('token');
+    const headers = token ? { headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' } } : {};
+    return this.http.post(`https://localhost:7240/api/Booking/create-booking`, booking, headers);
+  }
+  getMemberById(id: number): Observable<any> {
+  const token = localStorage.getItem('token');
+  const headers = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
+  return this.http.get(`https://localhost:7240/api/Member/${id}`, headers);
 }
 
+  getTreatmentServiceById(id: number): Observable<any> {
+  const token = localStorage.getItem('token');
+  const headers = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
+  return this.http.get(`https://localhost:7240/api/TreatmentService/${id}`, headers);
+  }
+  getMyNotifications(userId: number): Observable<any> {
+  const token = localStorage.getItem('token');
+  const headers = token ? {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  } : {};
+
+  return this.http.post(`https://localhost:7240/api/Notification/search-notification?userId=${userId}`, {}, headers);
 }
+createNotification(payload: any): Observable<any> {
+  const token = localStorage.getItem('token');
+  const headers = token ? {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  } : {};
+  return this.http.post(`https://localhost:7240/api/Notification/create-notification`, payload, headers);
+}
+
+} 

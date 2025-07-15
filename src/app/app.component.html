@@ -40,7 +40,7 @@
 
             <!-- ❌ Ẩn với Member/User -->
             <ng-container *ngIf="role !== 'Member' && role !== 'User'">
-              <a class="nav-link px-2 text-dark" routerLink="/patients">Patients</a>
+              <a class="nav-link px-2 text-dark" routerLink="/patients">Booking</a>
             </ng-container>
 
             <a class="nav-link px-2 text-dark" routerLink="/doctor">Doctors</a>
@@ -50,7 +50,7 @@
               <a class="nav-link px-2 text-dark" routerLink="/bookings">Bookings</a>
               <a class="nav-link px-2 text-dark" routerLink="/feedback">Feedback</a>
             </ng-container>
-
+            
             <a class="nav-link px-2 text-dark" routerLink="/contact">Contact</a>
           </nav>
 

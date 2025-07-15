@@ -25,9 +25,10 @@ export class ReminderComponent {
     const payload = {
       patientId: this.patient.patientId,
       ...this.reminderForm
+      
     };
 
-    this.http.post('/api/Reminder/create', payload, {
+    this.http.post('https://localhost:7240/api/Notification/create-notification', payload, {
       headers: new HttpHeaders({
         Authorization: `Bearer ${this.authService.getToken()}`
       })

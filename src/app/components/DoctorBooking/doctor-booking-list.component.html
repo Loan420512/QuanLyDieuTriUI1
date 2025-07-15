@@ -1,0 +1,28 @@
+<div class="booking-container">
+  <h2 class="title">Danh sách lịch khám của tôi</h2>
+
+  <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
+
+  <table *ngIf="bookings.length > 0" class="booking-table">
+    <thead>
+      <tr>
+        <th>Ngày khám</th>
+        <th>Dịch vụ</th>
+        <th>Trạng thái</th>
+        <th>Người đặt</th>
+        <th>Ngày tạo</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let b of bookings">
+        <td>{{ b.dayBooking | date: 'dd/MM/yyyy' }}</td>
+        <td>{{ b.treatmentService?.name }}</td>
+        <td>{{ b.statusBooking }}</td>
+        <td>{{ b.member?.username }}</td>
+        <td>{{ b.createAt | date: 'dd/MM/yyyy HH:mm' }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p *ngIf="bookings.length === 0 && !errorMessage">Chưa có lịch khám nào.</p>
+</div>

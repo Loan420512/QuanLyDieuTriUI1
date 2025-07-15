@@ -12,6 +12,6 @@ export class ReminderService {
       Authorization: `Bearer ${token}`
     });
 
-    return this.http.post('/api/Reminder/create', payload, { headers });
+    return this.http.post('https://localhost:7240/api/Notification/create-notification', payload, { headers });
   }
 }
